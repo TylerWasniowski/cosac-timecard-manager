@@ -2,6 +2,8 @@ var express = require('express');
 var rp = require('request-promise');
 var tough = require('tough-cookie');
 var moment = require('moment');
+var fs = require("fs");
+var config = require('./config');
 var router = express.Router();
 var setmoreSessionId;
 
@@ -47,6 +49,28 @@ async function getHours() {
     return staffHours;
 }
 
+async function getSetmoreStaffInfo() {
+    await ensureSetmoreSessionValidity();
+    var response = await rp({
+        uri: 'https://my.setmore.com/Staff?_=1531798949839',
+        jar: getSetmoreCookieJar(),
+        simple: false
+    });
+
+    return JSON.parse(response);
+}
+
+async function getSetmoreStaffHours() {
+    await ensureSetmoreSessionValidity();
+    var response = await rp({
+        uri: 'https://my.setmore.com/WorkingHours?_=1531848603632',
+        jar: getSetmoreCookieJar(),
+        simple: false
+    });
+
+    return JSON.parse(response);
+}
+
 async function ensureSetmoreSessionValidity() {
     if (!setmoreSessionId) {
         setmoreSessionId = await getSetmoreSessionId();
@@ -69,8 +93,8 @@ async function loginToSetmore() {
         uri: 'https://my.setmore.com/Login.do',
         method: 'POST',
         form: {
-            username: 'TylerWasniowski@gmail.com',
-            password: 'meme1232',
+            username: config.setmoreUsername,
+            password: config.setmorePassword,
             redirect: 'https://my.setmore.com/',
             lostemail: '',
             adminPwd: 'admin'
@@ -78,28 +102,6 @@ async function loginToSetmore() {
         jar: getSetmoreCookieJar(),
         simple: false
     });
-}
-
-async function getSetmoreStaffInfo() {
-    await ensureSetmoreSessionValidity();
-    var response = await rp({
-        uri: 'https://my.setmore.com/Staff?_=1531798949839',
-        jar: getSetmoreCookieJar(),
-        simple: false
-    });
-
-    return JSON.parse(response);
-}
-
-async function getSetmoreStaffHours() {
-    await ensureSetmoreSessionValidity();
-    var response = await rp({
-        uri: 'https://my.setmore.com/WorkingHours?_=1531848603632',
-        jar: getSetmoreCookieJar(),
-        simple: false
-    });
-
-    return JSON.parse(response);
 }
 
 async function getTimeCards() {
