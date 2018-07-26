@@ -9,7 +9,7 @@ var rp = require('request-promise');
 var tough = require('tough-cookie');
 var moment = require('moment');
 var fs = require("fs");
-var config = require('./config');
+var config = require('../config');
 
 var router = express.Router();
 var setmoreSessionId;
@@ -54,7 +54,7 @@ async function getHours(payPeriod) {
 
         var intervalsObj = datesToIntervals[startDateTimeObj.format(DATE_FORMAT)];
 
-        var insertIndex = findInsertIndex(intervalsObj.onIntervals, startDateTimeObj);
+        var insertIndex = binarySearch(intervalsObj.onIntervals, startDateTimeObj);
         var intervalObj = {
             startObj: startDateTimeObj,
             endObj: endDateTimeObj
@@ -133,21 +133,77 @@ function simplifyIntervals(intervals) {
     }
 }
 
-function findInsertIndex(intervals, dateTimeObj) {
-    var startIndex = 0;
-    var endIndex = intervals.length - 1;
-    var middleIndex = Math.floor((startIndex + endIndex) / 2);
-    while (startIndex <= endIndex) {
-        if (dateTimeObj.isSame(intervals[middleIndex].startObj))
-            return i;
-        else if (dateTimeObj.isBeofre(intervals[middleIndex].startObj))
-            endIndex = middleIndex - 1;
-        else if (dateTimeObj.isAfter(intervals[middleIndex].startObj))
-            startIndex = middleIndex + 1;
-        middleIndex = Math.floor((startIndex + endIndex) / 2);
+function findIntervalsDifference(a, b) {
+    var difference = a.map(interval => {
+        return {
+            startObj: moment(interval.startObj),
+            endObj: moment(interval.endObj)
+    };});
+    var i = 0;
+    var j = 0;
+    while (i < difference.length && j < b.length) {
+        var j = binarySearch(b, difference[j].startObj, j, b.length - 1, false);
+
+        if (difference[i].startObj.isBefore(b[j].endObj) && difference[i].endObj.isAfter(b[j].startObj)) {
+            if (difference[i].startObj.isSameOrAfter(b[j].startObj)) {
+                difference[i] = {
+                    startObj: b[j].endObj,
+                    endObj: difference[i].startObj
+                };
+            }
+            if (difference[i].endObj.isSameOrBefore(b[j].endObj)) {
+                difference[i] = {
+                    startObj: difference[i].startObj,
+                    endObj: b[j].startObj
+                };
+            }
+            if (difference[i].startObj.isBefore(b[j].startObj) && difference[i].endObj.isAfter(b[j].endObj)) {
+                // Split interval into two
+                difference.splice(i + 1, 0, {
+                    startObj: b[j].endObj, 
+                    endObj: difference[i].endObj
+                });
+                difference[i] = {
+                    startObj: difference[i].startObj,
+                    endObj: b[j].startObj
+                };
+                i++;
+            }
+        } else if (difference[i].endObj.isSameOrBefore(b[j].startObj)) {
+            i++;
+        } else {
+            j++;
+        }
     }
 
-    return middleIndex;
+    // Return only non-empty intervals
+    return difference.filter(interval => interval.startObj.isBefore(interval.endObj));
+}
+
+function binarySearch(intervals, dateTimeObj, startIndex, endIndex, endNotStart) {
+    if (endIndex == 0)
+        return 0;
+
+    var startIndex = startIndex || 0;
+    var endIndex = endIndex || Math.max(0, intervals.length - 1);
+
+    var middleIndex = Math.floor((startIndex + endIndex) / 2);
+
+    if (startIndex >= endIndex)
+        return middleIndex;
+        
+    var middleInterval = endNotStart ?
+    intervals[middleIndex].endObj :
+    intervals[middleIndex].startObj;
+
+    if (dateTimeObj.isSame(middleInterval))
+        return middleIndex;
+    else if (dateTimeObj.isBefore(middleInterval))
+        return binarySearch(intervals, dateTimeObj, startIndex, middleIndex);
+    else if (dateTimeObj.isAfter(middleInterval))
+        return binarySearch(intervals, dateTimeObj, middleIndex + 1, endIndex);
+    else
+        return -1;
 }
 
 async function getSetmoreStaffInfo() {
