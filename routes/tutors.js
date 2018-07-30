@@ -23,7 +23,8 @@ router.post('/update', async function(req, res, next) {
         return {
           name,
           timeClockId: timeClockEntry ? timeClockEntry.ID : '',
-          setmoreId: setmoreEntry.key
+          setmoreId: setmoreEntry.key,
+          setmoreKey: setmoreEntry.F_Key
         }
       });
 
