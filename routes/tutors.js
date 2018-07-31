@@ -12,8 +12,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/update', async function(req, res, next) {
-    var timeClockData = await timeClock.getStaffInfo();
-    var setmoreData = await setmore.getStaffInfo();
+    var timeClockResponse = timeClock.getStaffInfo();
+    var setmoreResponse = setmore.getStaffInfo();
+
+    var timeClockData = await timeClockResponse;
+    var setmoreData = await setmoreResponse;
 
     var tutors = setmoreData
       .map((setmoreEntry) => {
@@ -23,8 +26,7 @@ router.post('/update', async function(req, res, next) {
         return {
           name,
           timeClockId: timeClockEntry ? timeClockEntry.ID : '',
-          setmoreId: setmoreEntry.key,
-          setmoreKey: setmoreEntry.F_Key
+          setmoreId: setmoreEntry.key
         }
       });
 
