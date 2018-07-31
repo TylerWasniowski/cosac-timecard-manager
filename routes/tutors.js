@@ -1,7 +1,7 @@
 var express = require('express');
 var fs = require("fs");
 
-var openTimeClock = require('../lib/openopenTimeClock-requests');
+var openTimeClock = require('../lib/open-time-clock-requests');
 var setmore = require('../lib/setmore-requests');
 
 var router = express.Router();

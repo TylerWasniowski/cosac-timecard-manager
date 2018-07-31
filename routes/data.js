@@ -4,7 +4,7 @@ var moment = require('moment');
 
 var config = require('../config');
 
-var openTimeClock = require('../lib/opentimeclock-requests');
+var openTimeClock = require('../lib/open-time-clock-requests');
 var setmore = require('../lib/setmore-requests');
 
 var tutors = require('../data/tutors.json');
