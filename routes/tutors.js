@@ -1,7 +1,7 @@
 var express = require('express');
 var fs = require("fs");
 
-var timeClock = require('../lib/opentimeclock-requests');
+var openTimeClock = require('../lib/openopenTimeClock-requests');
 var setmore = require('../lib/setmore-requests');
 
 var router = express.Router();
@@ -12,20 +12,20 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/update', async function(req, res, next) {
-    var timeClockResponse = timeClock.getStaffInfo();
+    var openTimeClockResponse = openTimeClock.getStaffInfo();
     var setmoreResponse = setmore.getStaffInfo();
 
-    var timeClockData = await timeClockResponse;
+    var openTimeClockData = await openTimeClockResponse;
     var setmoreData = await setmoreResponse;
 
     var tutors = setmoreData
       .map((setmoreEntry) => {
         var name = setmoreEntry.FirstName + " " + setmoreEntry.LastName;
-        var timeClockEntry = timeClockData.find((timeClockEntry) => timeClockEntry.Name == name);
+        var openTimeClockEntry = openTimeClockData.find((openTimeClockEntry) => openTimeClockEntry.Name == name);
 
         return {
           name,
-          timeClockId: timeClockEntry ? timeClockEntry.ID : '',
+          openTimeClockId: openTimeClockEntry ? openTimeClockEntry.ID : '',
           setmoreId: setmoreEntry.key
         }
       });

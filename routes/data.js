@@ -1,15 +1,10 @@
 // TODO: Clean up this file by splitting functions into different files
-const DATE_FORMAT = 'YYYY-MM-DD';
-const TIME_FORMAT = 'HH:mm:SS';
-const OPENTIMECLOCK_DATE_FORMAT = 'MM/DD/YYYY';
-const OPENTIMECLOCK_DATE_SEPARATOR = ' - ';
-const OPENTIMECLOCK_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:SS';
-const SETMORE_TIME_FORMAT = 'HH:mm A';
-
 var express = require('express');
 var moment = require('moment');
 
-var timeClock = require('../lib/opentimeclock-requests');
+var config = require('../config');
+
+var openTimeClock = require('../lib/opentimeclock-requests');
 var setmore = require('../lib/setmore-requests');
 
 var tutors = require('../data/tutors.json');
@@ -26,19 +21,19 @@ async function getHours(payPeriodStart, payPeriodEnd) {
     var payPeriodStartObj = moment(payPeriodStart);
     var payPeriodEndObj = moment(payPeriodEnd);
 
-    var timeClockDateRange =
-        payPeriodStartObj.format(OPENTIMECLOCK_DATE_FORMAT) +
-        OPENTIMECLOCK_DATE_SEPARATOR +
-        payPeriodEndObj.format(OPENTIMECLOCK_DATE_FORMAT);
+    var openTimeClockDateRange =
+        payPeriodStartObj.format(config.openTimeClockDateFormat) +
+        config.openTimeClockDateSeparator +
+        payPeriodEndObj.format(config.openTimeClockDateFormat);
 
-    var timeClockHoursResponse = timeClock.getStaffHours(timeClockDateRange);
+    var openTimeClockHoursResponse = openTimeClock.getStaffHours(openTimeClockDateRange);
     var setmoreHoursResponse = setmore.getStaffHours();
 
-    var timeClockHours = await timeClockHoursResponse;
+    var openTimeClockHours = await openTimeClockHoursResponse;
     var setmoreHours = await setmoreHoursResponse;
 
     var staffHours = tutors.map((tutor) => {
-        var timeClockEntries = timeClockHours.filter((entry) => tutor.timeClockId == entry.EmployeeID);
+        var openTimeClockEntries = openTimeClockHours.filter((entry) => tutor.openTimeClockId == entry.EmployeeID);
         var setmoreData = setmoreHours.find((entry) => tutor.setmoreId == entry.ResourceKey);        
 
         // Transform OpenTimeClock data to this format:
@@ -57,24 +52,24 @@ async function getHours(payPeriodStart, payPeriodEnd) {
        var datesToIntervals = {};
        // Populate all the dates from the start to the end (inclusive) with empty interval objects
         for (var dateObj = moment(payPeriodStartObj); dateObj.isSameOrBefore(payPeriodEndObj); dateObj.add(1, 'd')) {
-            datesToIntervals[dateObj.format(DATE_FORMAT)] = {
+            datesToIntervals[dateObj.format(config.dateFormat)] = {
                 onIntervals: [],
                 offIntervals: []
             };
         }
-        timeClockEntries.forEach((entry) => {
-            var startDateTimeObj = moment(entry.InDateTime, OPENTIMECLOCK_DATE_TIME_FORMAT);
-            var endDateTimeObj = moment(entry.OutDateTime, OPENTIMECLOCK_DATE_TIME_FORMAT);
+        openTimeClockEntries.forEach((entry) => {
+            var startDateTimeObj = moment(entry.InDateTime, config.openTimeClockDateTimeFormat);
+            var endDateTimeObj = moment(entry.OutDateTime, config.openTimeClockDateTimeFormat);
 
             // console.log(entry.InDateTime);
-            // console.log(startDateTimeObj.format(DATE_FORMAT));
+            // console.log(startDateTimeObj.format(config.dateFormat));
             // console.log(datesToIntervals);
             // Object.keys(datesToIntervals)
-            //     .forEach(x => console.log(x + '| ' + x == startDateTimeObj.format(DATE_FORMAT)));
+            //     .forEach(x => console.log(x + '| ' + x == startDateTimeObj.format(config.dateFormat)));
             // console.log(Object.keys(datesToIntervals));
             // console.log('test');
 
-            var intervalsObj = datesToIntervals[startDateTimeObj.format(DATE_FORMAT)];
+            var intervalsObj = datesToIntervals[startDateTimeObj.format(config.dateFormat)];
 
             var intervalPair = Array.from(intervalsObj.onIntervals.entries())
                 .find((intervalPair) => startDateTimeObj.isAfter(intervalPair[1]));
@@ -109,15 +104,15 @@ async function getHours(payPeriodStart, payPeriodEnd) {
             .forEach((day) => {
                 var dataSplit = dayToHoursData[day].split(',');
                 dayToHoursData[day] = {
-                    startObj: moment(dataSplit[1], SETMORE_TIME_FORMAT),
-                    endObj: moment(dataSplit[3], SETMORE_TIME_FORMAT)
+                    startObj: moment(dataSplit[1], config.setmoreTimeFormat),
+                    endObj: moment(dataSplit[3], config.setmoreTimeFormat)
                 };
             });
 
         // Disregard time clocked in but not open on Setmore
         for (var date in datesToIntervals) {
             if (datesToIntervals.hasOwnProperty(date)) {
-                var dateObj = moment(date, DATE_FORMAT);
+                var dateObj = moment(date, config.dateFormat);
                 var day = dateObj
                     .format('dddd')
                     .toLowerCase();
