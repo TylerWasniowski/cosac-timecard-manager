@@ -23,7 +23,8 @@ hoursFileButton.onclick = () => {
             .map((entry) => {
                 var hoursString = Object
                     .keys(entry.hours)
-                    .map((day) => day + ': ' + entry.hours[day])
+                    // Round hours to nearest 0.5
+                    .map((day) => day + ': ' + (Math.round(entry.hours[day] * 2) / 2))
                     .join('\n');
 
                 return entry.name + '\n' + hoursString;
