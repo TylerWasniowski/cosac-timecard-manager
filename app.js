@@ -8,7 +8,17 @@ var indexRouter = require('./routes/index');
 var dataRouter = require('./routes/data');
 var tutorsRouter = require('./routes/tutors');
 
+var setmore = require('./lib/setmore-requests');
+
+var tutors = require('./data/tutors.json');
+
 var app = express();
+
+// Make a session for getting appointments for each tutor
+tutors.forEach(() => setmore.addSession());
+// These two are for the staff info and staff hours
+setmore.addSession();
+setmore.addSession();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
