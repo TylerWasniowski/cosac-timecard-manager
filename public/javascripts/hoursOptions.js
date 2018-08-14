@@ -14,6 +14,7 @@
         'payPeriodStart=' + payPeriodStartInput.value +
         '&payPeriodEnd=' + payPeriodEndInput.value;
         
+        var filename = payPeriodStartInput.value + ' - ' + payPeriodEndInput.value + '.txt';
         fetch(uri, {
             method: 'POST',
             body: JSON.stringify({
@@ -26,17 +27,28 @@
             .then((res) => res.json())
             .then((res) => res
                 .map((entry) => {
-                    var hoursString = Object
+                    // Round hours to nearest 0.5
+                    var hoursRounded = {};
+                    Object
                         .keys(entry.hours)
-                        // Round hours to nearest 0.5
-                        .map((day) => day + ': ' + (Math.round(entry.hours[day] * 2) / 2))
-                        .join('\n');
+                        .forEach((date) => {
+                            hoursRounded[date] = (Math.round(entry.hours[date] * 2) / 2);
+                        });
+                    var totalHours = Object
+                        .keys(hoursRounded)
+                        .reduce((hours, date) => hours + hoursRounded[date], 0);
+                    var hoursString = Object
+                        .keys(hoursRounded)
+                        .map((date) => date + ": " + hoursRounded[date])
+                        .join("\n")
+                        + "\n"
+                        + "Total Hours: " + totalHours;
 
                     return entry.name + '\n' + hoursString;
                 })
                 .join('\n\n')
             )
-            .then((res) => download('hours.txt', res));
+            .then((res) => download(filename, res));
 
         return false;
     };
