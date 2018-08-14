@@ -1,58 +1,43 @@
-const PAY_PERIOD_START_INPUT_SELECTOR = '#payPeriodStartInput';
-const PAY_PERIOD_END_INPUT_SELECTOR = '#payPeriodEndInput';
+const OPTIONS_CONTAINER_CLASS_NAME = 'optionsContainer';
+const OPTIONS_CLASS_NAME = 'options';
+const EXIT_BUTTON_CLASS_NAME = 'exitButton';
 
 const HOURS_FILE_BUTTON_SELECTOR = '#hoursFileButton';
 const UPDATE_TUTORS_BUTTON_SELECTOR = '#updateTutorsButton';
 
 
-let payPeriodStartInput = document.querySelector(PAY_PERIOD_START_INPUT_SELECTOR);
-let payPeriodEndInput = document.querySelector(PAY_PERIOD_END_INPUT_SELECTOR);
-
-let hoursFileButton = document.querySelector(HOURS_FILE_BUTTON_SELECTOR);
+let hoursRequestButton = document.querySelector(HOURS_FILE_BUTTON_SELECTOR);
 let updateTutorsButton = document.querySelector(UPDATE_TUTORS_BUTTON_SELECTOR);
 
+hoursRequestButton.onclick = () => {
+    fetch('/options/hours')
+        .then((res) => res.text())
+        .then(renderOptions);
+}
 
-hoursFileButton.onclick = () => {
-    var uri = '/data/hours?' +
-    'payPeriodStart=' + payPeriodStartInput.value +
-    '&payPeriodEnd=' + payPeriodEndInput.value;
-    
-    fetch(uri)
-        .then((res) => res.json())
-        .then((res) => res
-            .map((entry) => {
-                var hoursString = Object
-                    .keys(entry.hours)
-                    // Round hours to nearest 0.5
-                    .map((day) => day + ': ' + (Math.round(entry.hours[day] * 2) / 2))
-                    .join('\n');
-
-                return entry.name + '\n' + hoursString;
-            })
-            .join('\n\n')
-        )
-        .then((res) => download('hours.txt', res));
-    return false;
-};
 
 updateTutorsButton.onclick = () => {
     fetch('/tutors/update', {method: 'POST'})
-        .then((res) => res.json())
-        .then((res) => download('tutors.json', JSON.stringify(res)));
-
-    return false;
+        .then((res) => res.json());
 }
 
-// Taken from: https://stackoverflow.com/a/18197341
-function download(filename, text) {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
+function renderOptions(html) {
+    let optionsContainer = document.createElement('div');
+    optionsContainer.className = OPTIONS_CONTAINER_CLASS_NAME;
 
-    element.style.display = 'none';
-    document.body.appendChild(element);
+    let hoursOptionsDiv = document.createElement('div');
+    hoursOptionsDiv.className = OPTIONS_CLASS_NAME;
 
-    element.click();
+    let exitButton = document.createElement('span');
+    exitButton.className = EXIT_BUTTON_CLASS_NAME;
+    exitButton.innerText = 'X';
+    exitButton.onclick = () => {
+        document.body.removeChild(optionsContainer)
+    };
+    
+    hoursOptionsDiv.innerHTML = html;
+    hoursOptionsDiv.prepend(exitButton);
 
-    document.body.removeChild(element);
+    optionsContainer.appendChild(hoursOptionsDiv);
+    document.body.appendChild(optionsContainer);
 }

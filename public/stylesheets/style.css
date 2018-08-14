@@ -1,8 +1,49 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  text-align: center;
 }
 
 a {
   color: #00B7FF;
+}
+
+.optionsContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.options {
+  position: fixed;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  background: white;
+  border: black;
+  border-style: ridge;
+  border-width: 3px;
+  border-radius: 20px;
+}
+
+.exitButton {
+  float: right;
+  cursor: pointer;
+}
+
+.tutors {
+  margin: 10px 0;
+  columns: 5;
+  column-gap: 10px;
+  text-align: left;
+}
+
+input[type='date'] {
+  margin: 0 10px;
 }

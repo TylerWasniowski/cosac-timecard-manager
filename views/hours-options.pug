@@ -1,0 +1,14 @@
+h1 Hours Request
+h2 Pay Period
+input(id='payPeriodStartInput' type='date')
+input(id='payPeriodEndInput' type='date')
+h2 Tutors
+div(class='tutors')
+    each tutor in tutors
+        div(class='tutor')
+            input(id=tutor.setmoreId type='checkbox')
+            label(for=tutor.setmoreId)= tutor.name
+button(id='hoursRequestButton') Request
+
+
+
