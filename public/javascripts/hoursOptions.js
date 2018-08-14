@@ -1,19 +1,28 @@
-const HOURS_REQUEST_BUTTON_SELECTOR = '#hoursRequestButton';
+const REQUEST_HOURS_BUTTON_SELECTOR = '#requestHoursButton';
 
 const PAY_PERIOD_START_INPUT_SELECTOR = '#payPeriodStartInput';
 const PAY_PERIOD_END_INPUT_SELECTOR = '#payPeriodEndInput';
+const TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
 
 let payPeriodStartInput = document.querySelector(PAY_PERIOD_START_INPUT_SELECTOR);
 let payPeriodEndInput = document.querySelector(PAY_PERIOD_END_INPUT_SELECTOR);
 
-let hoursRequestButton = document.querySelector(HOURS_REQUEST_BUTTON_SELECTOR);
+let requestHoursButton = document.querySelector(REQUEST_HOURS_BUTTON_SELECTOR);
 
-hoursRequestButton.onclick = () => {
+requestHoursButton.onclick = () => {
     var uri = '/data/hours?' +
     'payPeriodStart=' + payPeriodStartInput.value +
     '&payPeriodEnd=' + payPeriodEndInput.value;
     
-    fetch(uri)
+    fetch(uri, {
+        method: 'POST',
+        body: JSON.stringify({
+            tutors: getCheckedTutors()
+        }),
+        headers:{
+            'Content-Type': 'application/json'
+        }
+    })
         .then((res) => res.json())
         .then((res) => res
             .map((entry) => {
@@ -28,8 +37,15 @@ hoursRequestButton.onclick = () => {
             .join('\n\n')
         )
         .then((res) => download('hours.txt', res));
+
     return false;
 };
+
+function getCheckedTutors() {
+    return Array.from(document.querySelectorAll(TUTOR_CHECKBOX_SELECTOR))
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.id);
+}
 
 // Taken from: https://stackoverflow.com/a/18197341
 function download(filename, text) {

@@ -7,6 +7,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var dataRouter = require('./routes/data');
 var tutorsRouter = require('./routes/tutors');
+var optionsRouter = require('./routes/options');
+var blockersRouter = require('./routes/blockers');
 
 var setmore = require('./lib/setmore-requests');
 
@@ -33,6 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/data', dataRouter);
 app.use('/tutors', tutorsRouter);
+app.use('/options', optionsRouter);
+app.use('/blockers', blockersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

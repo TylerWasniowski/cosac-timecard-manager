@@ -25,7 +25,7 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
-  background: white;
+  background: whitesmoke;
   border: black;
   border-style: ridge;
   border-width: 3px;
@@ -44,6 +44,6 @@ a {
   text-align: left;
 }
 
-input[type='date'] {
+input[type='date'], input[type='time'] {
   margin: 0 10px;
 }

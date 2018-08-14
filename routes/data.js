@@ -7,19 +7,22 @@ var config = require('../config');
 var openTimeClock = require('../lib/open-time-clock-requests');
 var setmore = require('../lib/setmore-requests');
 
-var tutors = require('../data/tutors.json');
+var allTutors = require('../data/tutors.json');
 
 var router = express.Router();
 
-var tutorsDone = 0;
-router.get('/hours', async function (req, res, next) {
-    const hours = await getHours(req.query.payPeriodStart, req.query.payPeriodEnd);
-    tutorsDone = 0;
+router.post('/hours', async function (req, res, next) {
+    var tutors = req
+        .body
+        .tutors
+        .map((setmoreId) => allTutors.find((tutor) => tutor.setmoreId == setmoreId));
+
+    const hours = await getHours(req.query.payPeriodStart, req.query.payPeriodEnd, tutors);
     res.send(hours);
 });
 
 // TODO: Separate into separate functions
-async function getHours(payPeriodStart, payPeriodEnd) {
+async function getHours(payPeriodStart, payPeriodEnd, tutors) {
     const payPeriodStartObj = moment(payPeriodStart);
     const payPeriodEndObj = moment(payPeriodEnd);
 
@@ -45,15 +48,6 @@ async function getHours(payPeriodStart, payPeriodEnd) {
 
 function evaluateHoursWorked(name, payPeriodStartObj, payPeriodEndObj,
     openTimeClockHours, setmoreHours, slotBlockers) {
-    console.log(name);
-    console.log(++tutorsDone + '/' + tutors.length);
-    if (!setmoreHours) {
-        return {
-            name: name + ': ' + 'Setmore Error',
-            hours: {}
-        }
-    }
-
     var openTimeClockDatesToIntervals = formattedOpenTimeClockHours(openTimeClockHours, payPeriodStartObj, payPeriodEndObj);
     var setmoreDatesToIntervals = formattedSetmoreHours(setmoreHours, payPeriodStartObj, payPeriodEndObj);
 
@@ -67,7 +61,7 @@ function evaluateHoursWorked(name, payPeriodStartObj, payPeriodEndObj,
         const endObj = moment(startObj).add(durationMinutes, 'minutes');
 
         const interval = { startObj, endObj };
-        insertInterval(openTimeClockDatesToIntervals, interval);                
+        insertInterval(setmoreDatesToIntervals, interval);         
     });
     
 
@@ -78,7 +72,7 @@ function evaluateHoursWorked(name, payPeriodStartObj, payPeriodEndObj,
         .forEach((date) => {
             datesToIntervals[date] = intervalsIntersection(
                 openTimeClockDatesToIntervals[date],
-                setmoreDatesToIntervals[date]
+                intervalsSimple(setmoreDatesToIntervals[date])
             );
         });
 
@@ -96,20 +90,20 @@ function evaluateHoursWorked(name, payPeriodStartObj, payPeriodEndObj,
         const endObj = moment(startObj).add(durationMinutes, 'minutes');
 
         const interval = { startObj, endObj };
-        insertInterval(openTimeClockDatesToIntervals, interval);                
+        insertInterval(setmoreDatesToIntervals, interval);                
     });
     
     // Transform intervals to hours worked
     var datesToHoursWorked = {};
-    for (var date in openTimeClockDatesToIntervals) {
-        if (openTimeClockDatesToIntervals.hasOwnProperty(date)) {
-            datesToHoursWorked[date] = openTimeClockDatesToIntervals[date]
+    for (var date in datesToIntervals) {
+        if (datesToIntervals.hasOwnProperty(date)) {
+            datesToHoursWorked[date] = datesToIntervals[date]
                 .reduce((hours, intervalsObj) => {
                     return hours + intervalsObj.endObj.diff(intervalsObj.startObj, 'hours', true);
                 }, 0);
         }
     }
-    
+
     return {
         name,
         hours: datesToHoursWorked

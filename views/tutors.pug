@@ -1,0 +1,5 @@
+div(class='tutors')
+    each tutor in tutors
+        div(class='tutor')
+            input(id=tutor.setmoreId type='checkbox')
+            label(for=tutor.setmoreId)= tutor.name
