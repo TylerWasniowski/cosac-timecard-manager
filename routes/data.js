@@ -16,7 +16,7 @@ router.post('/hours', async function (req, res, next) {
         .body
         .tutors
         .map((setmoreId) => allTutors.find((tutor) => tutor.setmoreId == setmoreId));
-
+        
     const hours = await getHours(req.query.payPeriodStart, req.query.payPeriodEnd, tutors);
     res.send(hours);
 });

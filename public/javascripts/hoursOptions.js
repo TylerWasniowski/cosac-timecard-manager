@@ -1,8 +1,8 @@
-const REQUEST_HOURS_BUTTON_SELECTOR = '#requestHoursButton';
+let REQUEST_HOURS_BUTTON_SELECTOR = '#requestHoursButton';
 
-const PAY_PERIOD_START_INPUT_SELECTOR = '#payPeriodStartInput';
-const PAY_PERIOD_END_INPUT_SELECTOR = '#payPeriodEndInput';
-const TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
+let PAY_PERIOD_START_INPUT_SELECTOR = '#payPeriodStartInput';
+let PAY_PERIOD_END_INPUT_SELECTOR = '#payPeriodEndInput';
+let TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
 
 let payPeriodStartInput = document.querySelector(PAY_PERIOD_START_INPUT_SELECTOR);
 let payPeriodEndInput = document.querySelector(PAY_PERIOD_END_INPUT_SELECTOR);

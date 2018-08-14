@@ -1,14 +1,14 @@
-const TIME_START_SELECTOR = '#timeStart';
-const TIME_END_SELECTOR = '#timeEnd';
-const DESCRIPTION_SELECTOR = '#description';
-const DATES_CONTAINER_SELECTOR = '.dates';
-const DATE_SELECTOR = DATES_CONTAINER_SELECTOR + ' input[type=\'date\']';
-const TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
-const CREATE_SLOT_BLOCKERS_BUTTON_SELECTOR = '#createSlotBlockersButton';
+let TIME_START_SELECTOR = '#timeStart';
+let TIME_END_SELECTOR = '#timeEnd';
+let DESCRIPTION_SELECTOR = '#description';
+let DATES_CONTAINER_SELECTOR = '.dates';
+let DATE_SELECTOR = DATES_CONTAINER_SELECTOR + ' input[type=\'date\']';
+let TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
+let CREATE_SLOT_BLOCKERS_BUTTON_SELECTOR = '#createSlotBlockersButton';
 
-const datesContainer = document.querySelector(DATES_CONTAINER_SELECTOR);
-const firstDateInput = document.querySelector(DATE_SELECTOR);
-const createSlotBlockersButton = document.querySelector(CREATE_SLOT_BLOCKERS_BUTTON_SELECTOR);
+let datesContainer = document.querySelector(DATES_CONTAINER_SELECTOR);
+let firstDateInput = document.querySelector(DATE_SELECTOR);
+let createSlotBlockersButton = document.querySelector(CREATE_SLOT_BLOCKERS_BUTTON_SELECTOR);
 
 firstDateInput.onchange = () => {
     addDateInput();
