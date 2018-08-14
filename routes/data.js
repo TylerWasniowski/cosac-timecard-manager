@@ -16,7 +16,7 @@ router.post('/hours', async function (req, res, next) {
         .body
         .tutors
         .map((setmoreId) => allTutors.find((tutor) => tutor.setmoreId == setmoreId));
-        
+    
     const hours = await getHours(req.query.payPeriodStart, req.query.payPeriodEnd, tutors);
     res.send(hours);
 });
@@ -90,7 +90,7 @@ function evaluateHoursWorked(name, payPeriodStartObj, payPeriodEndObj,
         const endObj = moment(startObj).add(durationMinutes, 'minutes');
 
         const interval = { startObj, endObj };
-        insertInterval(setmoreDatesToIntervals, interval);                
+        insertInterval(datesToIntervals, interval);
     });
     
     // Transform intervals to hours worked
