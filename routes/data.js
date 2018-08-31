@@ -48,6 +48,7 @@ async function getHours(payPeriodStart, payPeriodEnd, tutors) {
 
 function evaluateHoursWorked(name, payPeriodStartObj, payPeriodEndObj,
     openTimeClockHours, setmoreHours, slotBlockers) {
+
     var openTimeClockDatesToIntervals = formattedOpenTimeClockHours(openTimeClockHours, payPeriodStartObj, payPeriodEndObj);
     var setmoreDatesToIntervals = formattedSetmoreHours(setmoreHours, payPeriodStartObj, payPeriodEndObj);
 
@@ -128,6 +129,7 @@ function formattedOpenTimeClockHours(openTimeClockHours, startDateObj, endDateOb
            startObj: startDateTimeObj,
            endObj: endDateTimeObj
        };
+       
        insertInterval(datesToIntervals, interval, true);
    });
 
@@ -156,8 +158,8 @@ function formattedSetmoreHours(setmoreHours, startDateObj, endDateObj) {
         .forEach((day) => {
             var dataSplit = setmoreDayToHours[day].split(',');
             setmoreDayToHours[day] = {
-                startObj: moment(dataSplit[1], config.setmoreTimeFormat),
-                endObj: moment(dataSplit[3], config.setmoreTimeFormat)
+                start: dataSplit[1],
+                end: dataSplit[3]
             };
         });
 
@@ -169,7 +171,12 @@ function formattedSetmoreHours(setmoreHours, startDateObj, endDateObj) {
                 .format('dddd')
                 .toLowerCase();
                 
-            const interval = setmoreDayToHours[day];
+            const interval = {
+                startObj: moment(date + ' ' + setmoreDayToHours[day].start,
+                    config.dateFormat + ' ' + config.setmoreTimeFormat),
+                endObj:  moment(date + ' ' + setmoreDayToHours[day].end,
+                config.dateFormat + ' ' + config.setmoreTimeFormat)
+            };
             datesToIntervals[date].push(interval);
         });
     return datesToIntervals;
@@ -322,7 +329,7 @@ function datesToIntervalsPopulated(startDateObj, endDateObj) {
 
 // Returns true if interval-a overlaps at all with interval b and false otherwise
 function areOverlapping(a, b) {
-    return a.startObj.isSameOrBefore(b.endObj) && a.endObj.isSameOrAfter(b.startObj);
+    return a.startObj.isBefore(b.endObj) && a.endObj.isAfter(b.startObj);
 }
 
 // Returns true if interval-b is contained within interval-a
