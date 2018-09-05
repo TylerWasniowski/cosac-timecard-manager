@@ -1,35 +1,33 @@
-var express = require('express');
-var moment = require('moment');
+import express from 'express';
+import moment from 'moment';
+import config from '../config';
+import setmore from '../lib/setmore-requests';
 
-var config = require('../config');
+const router = express.Router();
 
-var setmore = require('../lib/setmore-requests');
-
-var router = express.Router();
-
-router.post('/create', async function(req, res, next) {
-    req
+router.post('/create', async (req, res, next) => {
+  req
+    .body
+    .tutors
+    .forEach((staffId) => {
+      req
         .body
-        .tutors
-        .forEach((staffId) => {
-            req
-                .body
-                .dates
-                .forEach((date) => {
-                    var startDateTimeObj = moment(
-                        date + req.body.timeStart,
-                        config.dateFormat + config.timeFormat
-                    );
-                    var endDateTimeObj = moment(
-                        date + req.body.timeEnd,
-                        config.dateFormat + config.timeFormat
-                    );
+        .dates
+        .forEach((date) => {
+          const startDateTimeObj = moment(
+            date + req.body.timeStart,
+            config.dateFormat + config.timeFormat
+          );
+          const endDateTimeObj = moment(
+            date + req.body.timeEnd,
+            config.dateFormat + config.timeFormat
+          );
 
-                    setmore.createSlotBlocker(staffId, startDateTimeObj, endDateTimeObj, req.body.description);
-                });
+          setmore.createSlotBlocker(staffId, startDateTimeObj, endDateTimeObj, req.body.description);
         });
+    });
 
-    res.send('Sent requests');
+  res.send('Sent requests');
 });
 
-module.exports = router;
+export default router;

@@ -1,19 +1,18 @@
-var express = require('express');
+import express from 'express';
+import tutors from '../data/tutors.json';
 
-var tutors = require('../data/tutors.json');
+const router = express.Router();
 
-var router = express.Router();
-
-router.get('/hours', function (req, res, next) {
-    res.render('hours-options', {
-      tutors
-    });
+router.get('/hours', (req, res, next) => {
+  res.render('hours-options', {
+    tutors
+  });
 });
 
-router.get('/blockers', function (req, res, next) {
+router.get('/blockers', (req, res, next) => {
   res.render('blockers-options', {
     tutors
   });
 });
 
-module.exports = router;
+export default router;

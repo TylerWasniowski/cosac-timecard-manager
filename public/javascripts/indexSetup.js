@@ -12,48 +12,48 @@ const slotBlockersButton = document.querySelector(SLOT_BLOCKERS_BUTTON_SELECTOR)
 const updateTutorsButton = document.querySelector(UPDATE_TUTORS_BUTTON_SELECTOR);
 
 hoursFileButton.onclick = () => {
-    fetch('/options/hours')
-        .then((res) => res.text())
-        .then(renderOptions);
-}
+  fetch('/options/hours')
+    .then(res => res.text())
+    .then(renderOptions);
+};
 
 slotBlockersButton.onclick = () => {
-    fetch('/options/blockers')
-        .then((res) => res.text())
-        .then(renderOptions);
-}
+  fetch('/options/blockers')
+    .then(res => res.text())
+    .then(renderOptions);
+};
 
 updateTutorsButton.onclick = () => {
-    fetch('/tutors/update', {method: 'POST'})
-        .then((res) => res.json());
-}
+  fetch('/tutors/update', { method: 'POST' })
+    .then(res => res.json());
+};
 
 function renderOptions(html) {
-    let optionsContainer = document.createElement('div');
-    optionsContainer.className = OPTIONS_CONTAINER_CLASS_NAME;
+  const optionsContainer = document.createElement('div');
+  optionsContainer.className = OPTIONS_CONTAINER_CLASS_NAME;
 
-    let optionsDiv = document.createElement('div');
-    optionsDiv.className = OPTIONS_CLASS_NAME;
+  const optionsDiv = document.createElement('div');
+  optionsDiv.className = OPTIONS_CLASS_NAME;
 
-    let exitButton = document.createElement('span');
-    exitButton.className = EXIT_BUTTON_CLASS_NAME;
-    exitButton.innerText = 'X';
-    exitButton.onclick = () => {
-        document.body.removeChild(optionsContainer)
-    };
-    
-    optionsDiv.innerHTML = html;
-    optionsDiv.prepend(exitButton);
+  const exitButton = document.createElement('span');
+  exitButton.className = EXIT_BUTTON_CLASS_NAME;
+  exitButton.innerText = 'X';
+  exitButton.onclick = () => {
+    document.body.removeChild(optionsContainer);
+  };
 
-    optionsContainer.appendChild(optionsDiv);
-    document.body.appendChild(optionsContainer);
+  optionsDiv.innerHTML = html;
+  optionsDiv.prepend(exitButton);
 
-    optionsDiv.querySelectorAll('script')
-        .forEach((script) => {
-            optionsDiv.removeChild(script);
+  optionsContainer.appendChild(optionsDiv);
+  document.body.appendChild(optionsContainer);
 
-            let newScript = document.createElement('script');
-            newScript.src = script.src;
-            optionsDiv.appendChild(newScript);
-        });
+  optionsDiv.querySelectorAll('script')
+    .forEach((script) => {
+      optionsDiv.removeChild(script);
+
+      const newScript = document.createElement('script');
+      newScript.src = script.src;
+      optionsDiv.appendChild(newScript);
+    });
 }

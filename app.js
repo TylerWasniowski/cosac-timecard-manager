@@ -1,20 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import indexRouter from './routes/index';
+import dataRouter from './routes/data';
+import tutorsRouter from './routes/tutors';
+import optionsRouter from './routes/options';
+import blockersRouter from './routes/blockers';
+import setmore from './lib/setmore-requests';
+import tutors from './data/tutors.json';
 
-var indexRouter = require('./routes/index');
-var dataRouter = require('./routes/data');
-var tutorsRouter = require('./routes/tutors');
-var optionsRouter = require('./routes/options');
-var blockersRouter = require('./routes/blockers');
-
-var setmore = require('./lib/setmore-requests');
-
-var tutors = require('./data/tutors.json');
-
-var app = express();
+const app = express();
 
 // Make a session for getting appointments for each tutor
 tutors.forEach(() => setmore.addSession());
@@ -39,12 +36,12 @@ app.use('/options', optionsRouter);
 app.use('/blockers', blockersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -54,4 +51,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;
