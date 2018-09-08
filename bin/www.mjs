@@ -3,10 +3,9 @@
 /**
  * Module dependencies.
  */
-
-import app from '../app';
 import _debug from 'debug';
 import http from 'http';
+import app from '../app';
 
 const debug = _debug('cosac-timecard-manager:server');
 

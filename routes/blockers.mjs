@@ -1,11 +1,11 @@
 import express from 'express';
 import moment from 'moment';
-import config from '../config';
 import setmore from '../lib/setmore-requests';
 
+const { dateFormat, timeFormat } = process.env;
 const router = express.Router();
 
-router.post('/create', async (req, res, next) => {
+router.post('/create', async (req, res) => {
   req
     .body
     .tutors
@@ -16,14 +16,18 @@ router.post('/create', async (req, res, next) => {
         .forEach((date) => {
           const startDateTimeObj = moment(
             date + req.body.timeStart,
-            config.dateFormat + config.timeFormat
+            dateFormat + timeFormat
           );
           const endDateTimeObj = moment(
             date + req.body.timeEnd,
-            config.dateFormat + config.timeFormat
+            dateFormat + timeFormat
           );
-
-          setmore.createSlotBlocker(staffId, startDateTimeObj, endDateTimeObj, req.body.description);
+          setmore.createSlotBlocker(
+            staffId,
+            startDateTimeObj,
+            endDateTimeObj,
+            req.body.description
+          );
         });
     });
 

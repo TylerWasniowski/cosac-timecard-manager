@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import dotenv from 'dotenv';
 import indexRouter from './routes/index';
 import dataRouter from './routes/data';
 import tutorsRouter from './routes/tutors';
@@ -10,6 +11,8 @@ import optionsRouter from './routes/options';
 import blockersRouter from './routes/blockers';
 import setmore from './lib/setmore-requests';
 import tutors from './data/tutors.json';
+
+dotenv.config();
 
 const app = express();
 
@@ -41,7 +44,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

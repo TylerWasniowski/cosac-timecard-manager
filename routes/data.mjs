@@ -1,15 +1,20 @@
 // TODO: Clean up this file by splitting functions into different files
 import express from 'express';
-
 import moment from 'moment';
-import config from '../config';
 import openTimeClock from '../lib/open-time-clock-requests';
 import setmore from '../lib/setmore-requests';
 import allTutors from '../data/tutors.json';
 
+const {
+  setmoreResponseDateTimeFormat,
+  openTimeClockDateTimeFormat,
+  dateFormat,
+  setmoreTimeFormat
+} = process.env;
+
 const router = express.Router();
 
-router.post('/hours', async (req, res, next) => {
+router.post('/hours', async (req, res) => {
   const tutors = req
     .body
     .tutors
@@ -58,7 +63,7 @@ function evaluateHoursWorked(
 
   extendedEntries.forEach((entry) => {
     const durationMinutes = entry.endTime - entry.startTime;
-    const startObj = moment(entry.startDate, config.setmoreResponseDateTimeFormat);
+    const startObj = moment(entry.startDate, setmoreResponseDateTimeFormat);
     const endObj = moment(startObj).add(durationMinutes, 'minutes');
 
     const interval = { startObj, endObj };
@@ -87,7 +92,7 @@ function evaluateHoursWorked(
 
   adminEntries.forEach((entry) => {
     const durationMinutes = entry.endTime - entry.startTime;
-    const startObj = moment(entry.startDate, config.setmoreResponseDateTimeFormat);
+    const startObj = moment(entry.startDate, setmoreResponseDateTimeFormat);
     const endObj = moment(startObj).add(durationMinutes, 'minutes');
 
     const interval = { startObj, endObj };
@@ -120,8 +125,8 @@ function formattedOpenTimeClockHours(openTimeClockHours, startDateObj, endDateOb
   const datesToIntervals = datesToIntervalsPopulated(startDateObj, endDateObj);
 
   openTimeClockHours.forEach((entry) => {
-    const startDateTimeObj = moment(entry.InDateTime, config.openTimeClockDateTimeFormat);
-    const endDateTimeObj = moment(entry.OutDateTime, config.openTimeClockDateTimeFormat);
+    const startDateTimeObj = moment(entry.InDateTime, openTimeClockDateTimeFormat);
+    const endDateTimeObj = moment(entry.OutDateTime, openTimeClockDateTimeFormat);
 
     const interval = {
       startObj: startDateTimeObj,
@@ -165,18 +170,18 @@ function formattedSetmoreHours(setmoreHours, startDateObj, endDateObj) {
   Object
     .keys(datesToIntervals)
     .forEach((date) => {
-      const day = moment(date, config.dateFormat)
+      const day = moment(date, dateFormat)
         .format('dddd')
         .toLowerCase();
 
       const interval = {
         startObj: moment(
           `${date} ${setmoreDayToHours[day].start}`,
-          `${config.dateFormat} ${config.setmoreTimeFormat}`
+          `${dateFormat} ${setmoreTimeFormat}`
         ),
         endObj: moment(
           `${date} ${setmoreDayToHours[day].end}`,
-          `${config.dateFormat} ${config.setmoreTimeFormat}`
+          `${dateFormat} ${setmoreTimeFormat}`
         )
       };
       datesToIntervals[date].push(interval);
@@ -305,7 +310,7 @@ function intervalsCopied(intervals) {
 
 
 function insertInterval(datesToIntervals, interval) {
-  const intervals = datesToIntervals[interval.startObj.format(config.dateFormat)];
+  const intervals = datesToIntervals[interval.startObj.format(dateFormat)];
   const insertIndex = findInsertIndex(intervals, interval.startObj);
 
   intervals.splice(insertIndex, 0, interval);
@@ -322,7 +327,7 @@ function findInsertIndex(intervals, timeObj) {
 function datesToIntervalsPopulated(startDateObj, endDateObj) {
   const datesToIntervals = {};
   for (const dateObj = moment(startDateObj); dateObj.isSameOrBefore(endDateObj); dateObj.add(1, 'day')) {
-    datesToIntervals[dateObj.format(config.dateFormat)] = [];
+    datesToIntervals[dateObj.format(dateFormat)] = [];
   }
 
   return datesToIntervals;
