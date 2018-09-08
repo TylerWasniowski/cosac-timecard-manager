@@ -2,7 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import openTimeClock from '../lib/open-time-clock-requests';
 import setmore from '../lib/setmore-requests';
-import tutors from '../data/tutors.json';
+import tutors from '../data/tutors';
 
 const router = express.Router();
 

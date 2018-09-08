@@ -10,7 +10,7 @@ import tutorsRouter from './routes/tutors';
 import optionsRouter from './routes/options';
 import blockersRouter from './routes/blockers';
 import setmore from './lib/setmore-requests';
-import tutors from './data/tutors.json';
+import tutors from './data/tutors';
 
 dotenv.config();
 

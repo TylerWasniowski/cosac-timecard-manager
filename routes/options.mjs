@@ -3,13 +3,13 @@ import tutors from '../data/tutors.json';
 
 const router = express.Router();
 
-router.get('/hours', (req, res, next) => {
+router.get('/hours', (req, res) => {
   res.render('hours-options', {
     tutors
   });
 });
 
-router.get('/blockers', (req, res, next) => {
+router.get('/blockers', (req, res) => {
   res.render('blockers-options', {
     tutors
   });
