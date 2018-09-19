@@ -18,7 +18,7 @@ router.post('/hours', async (req, res) => {
   const tutors = req
     .body
     .tutors
-    .map(setmoreId => allTutors.find(tutor => tutor.setmoreId == setmoreId));
+    .map(setmoreId => allTutors.find(tutor => tutor.setmoreId === setmoreId));
 
   const hours = await getHours(req.query.payPeriodStart, req.query.payPeriodEnd, tutors);
   res.send(hours);
@@ -37,9 +37,9 @@ async function getHours(payPeriodStart, payPeriodEnd, tutors) {
 
     return Promise.all([openTimeClockHoursPromise, setmoreHoursPromise, appointmentsPromise])
       .then(responses => [
-        responses[0].filter(entry => entry.EmployeeID == tutor.openTimeClockId),
-        responses[1].find(entry => entry.ResourceKey == tutor.setmoreId),
-        responses[2].filter(appointment => appointment.serviceKey == 'slotBlocker')
+        responses[0].filter(entry => entry.EmployeeID === tutor.openTimeClockId),
+        responses[1].find(entry => entry.ResourceKey === tutor.setmoreId),
+        responses[2].filter(appointment => appointment.serviceKey === 'slotBlocker')
       ])
       .then(responses => evaluateHoursWorked(
         tutor.name, payPeriodStartObj, payPeriodEndObj,

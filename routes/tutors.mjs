@@ -21,7 +21,7 @@ router.post('/update', async (req, res, next) => {
   const tutors = setmoreData
     .map((setmoreEntry) => {
       const name = `${setmoreEntry.FirstName} ${setmoreEntry.LastName}`;
-      const openTimeClockEntry = openTimeClockData.find(openTimeClockEntry => openTimeClockEntry.Name == name);
+      const openTimeClockEntry = openTimeClockData.find(openTimeClockEntry => openTimeClockEntry.Name === name);
 
       return {
         name,
