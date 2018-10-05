@@ -3,17 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "lint": "eslint . --ext .mjs",
+    "start": "node -r esm ./bin/www",
+    "test": "npm run lint"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "express": "~4.16.0",
-    "http-errors": "~1.6.2",
+    "debug": "~3.1.0",
+    "dotenv": "^6.0.0",
+    "eslint": "^5.5.0",
+    "eslint-config-bliss": "^2.2.0",
+    "esm": "^3.0.82",
+    "express": "~4.16.3",
+    "http-errors": "~1.7.0",
     "moment": "^2.22.2",
     "morgan": "~1.9.0",
-    "pug": "2.0.0-beta11",
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "node": "^10.10.0",
+    "pug": "2.0.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "tough-cookie": "^2.4.3"
+  },
+  "esm": {
+    "cjs": true
   }
 }
