@@ -1,9 +1,9 @@
+import 'dotenv/config';
 import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import dotenv from 'dotenv';
 import indexRouter from './routes/index';
 import dataRouter from './routes/data';
 import tutorsRouter from './routes/tutors';
@@ -11,8 +11,6 @@ import optionsRouter from './routes/options';
 import blockersRouter from './routes/blockers';
 import setmore from './lib/setmore-requests';
 import tutors from './data/tutors';
-
-dotenv.config();
 
 const app = express();
 
