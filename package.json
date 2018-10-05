@@ -21,7 +21,8 @@
     "node": "^10.10.0",
     "pug": "2.0.3",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "tough-cookie": "^2.4.3"
   },
   "esm": {
     "cjs": true
