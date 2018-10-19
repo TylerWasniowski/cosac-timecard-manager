@@ -8,7 +8,26 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-  res.send(tutors);
+  res.json(tutors);
+});
+
+router.get('/list', async (req, res, next) => {
+  const setmoreResponse = setmore.getStaffServices();
+  const setmoreData = await setmoreResponse;
+
+  const tutorsData = tutors
+    .map((tutor) => {
+      const services = setmoreData
+        .filter(service => service.ResourceKey.indexOf(tutor.setmoreId) !== -1)
+        .map(service => service.ServiceName);
+
+      return {
+        name: tutor.name,
+        services
+      };
+    });
+
+  res.json(tutorsData);
 });
 
 router.post('/update', async (req, res, next) => {
@@ -31,7 +50,7 @@ router.post('/update', async (req, res, next) => {
     });
 
   fs.writeFile('./data/tutors.json', JSON.stringify(tutors), 'utf8', () => {});
-  res.send(tutors);
+  res.json(tutors);
 });
 
 export default router;

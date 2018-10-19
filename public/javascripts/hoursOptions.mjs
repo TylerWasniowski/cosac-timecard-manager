@@ -1,3 +1,5 @@
+import download from './download.mjs';
+
 (() => {
   const REQUEST_HOURS_BUTTON_SELECTOR = '#requestHoursButton';
   const PAY_PERIOD_START_INPUT_SELECTOR = '#payPeriodStartInput';
@@ -43,7 +45,8 @@
           return `${entry.name}\n${hoursString}`;
         })
         .join('\n\n'))
-      .then(res => download(filename, res));
+      .then(res => download(filename, res))
+      .catch(alert);
 
     return false;
   };
@@ -54,17 +57,4 @@
       .map(checkbox => checkbox.id);
   }
 
-  // Taken from: https://stackoverflow.com/a/18197341
-  function download(filename, text) {
-    const element = document.createElement('a');
-    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-  }
 })();
