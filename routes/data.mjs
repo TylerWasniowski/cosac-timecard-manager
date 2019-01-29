@@ -31,45 +31,68 @@ async function getHours(payPeriodStart, payPeriodEnd, tutors) {
 
   const openTimeClockHoursPromise = openTimeClock.getStaffHours(payPeriodStartObj, payPeriodEndObj);
   const setmoreHoursPromise = setmore.getStaffHours();
+  const setmoreBreaksPromise = setmore.getStaffBreaks();
 
   const staffHoursPromises = tutors.map((tutor) => {
     const appointmentsPromise = setmore.getAppointments(tutor.setmoreId, payPeriodStartObj, payPeriodEndObj);
 
-    return Promise.all([openTimeClockHoursPromise, setmoreHoursPromise, appointmentsPromise])
+    return Promise.all([openTimeClockHoursPromise, setmoreHoursPromise, setmoreBreaksPromise, appointmentsPromise])
       .then(responses => [
         responses[0].filter(entry => entry.EmployeeID === tutor.openTimeClockId),
         responses[1].find(entry => entry.ResourceKey === tutor.setmoreId),
-        responses[2].filter(appointment => appointment.serviceKey === 'slotBlocker')
+        responses[2].find(entry => entry.ResourceKey === tutor.setmoreId),
+        responses[3].filter(appointment => appointment.serviceKey === 'slotBlocker')
       ])
       .then(responses => evaluateHoursWorked(
         tutor.name, payPeriodStartObj, payPeriodEndObj,
-        responses[0], responses[1], responses[2]
+        responses[0], responses[1], responses[2], responses[3]
       ));
   });
 
-  return await Promise.all(staffHoursPromises);
+  return Promise.all(staffHoursPromises);
 }
 
 function evaluateHoursWorked(
   name, payPeriodStartObj, payPeriodEndObj,
-  openTimeClockHours, setmoreHours, slotBlockers
+  openTimeClockHours, setmoreHours, setmoreBreaks, slotBlockers
 ) {
   const openTimeClockDatesToIntervals = formattedOpenTimeClockHours(openTimeClockHours, payPeriodStartObj, payPeriodEndObj);
-  const setmoreDatesToIntervals = formattedSetmoreHours(setmoreHours, payPeriodStartObj, payPeriodEndObj);
+  const setmoreHoursDatesToIntervals = formattedSetmoreHours(setmoreHours, payPeriodStartObj, payPeriodEndObj);
+  const setmoreBreaksDatesToIntervals = formattedSetmoreHours(setmoreBreaks, payPeriodStartObj, payPeriodEndObj);
 
+  console.log(setmoreHoursDatesToIntervals);
   // Add extended hours
-  const extendedEntries = slotBlockers
+  const extendedSlotBlockers = slotBlockers
     .filter(slotBlocker => slotBlocker.Comments.startsWith('E -'));
+  const adminSlotBlockers = slotBlockers
+    .filter(slotBlocker => slotBlocker.Comments.startsWith('A -'));
+  const timeOffBlockers = slotBlockers
+    .filter(slotBlocker => !slotBlocker.Comments.startsWith('E -') && !slotBlocker.Comments.startsWith('A -'));
 
-  extendedEntries.forEach((entry) => {
-    const durationMinutes = entry.endTime - entry.startTime;
-    const startObj = moment(entry.startDate, setmoreResponseDateTimeFormat);
-    const endObj = moment(startObj).add(durationMinutes, 'minutes');
-
-    const interval = { startObj, endObj };
-    insertInterval(setmoreDatesToIntervals, interval);
+  extendedSlotBlockers.forEach((slotBlocker) => {
+    const interval = intervalFromSlotBlocker(slotBlocker);
+    insertInterval(setmoreHoursDatesToIntervals, interval);
   });
 
+
+  Object
+    .keys(setmoreHoursDatesToIntervals)
+    .forEach((date) => {
+      // Simplify setmore intervals by merging the newly added extended entries
+      setmoreHoursDatesToIntervals[date] = intervalsSimple(setmoreHoursDatesToIntervals[date]);
+      // Handle breaks
+      setmoreHoursDatesToIntervals[date] = intervalsDifference(
+        setmoreHoursDatesToIntervals[date],
+        setmoreBreaksDatesToIntervals[date]
+      );
+    });
+
+  // Handle time off
+  timeOffBlockers
+    .forEach((slotBlocker) => {
+      const interval = intervalFromSlotBlocker(slotBlocker);
+      subtractInterval(setmoreHoursDatesToIntervals, interval);
+    });
 
   // Only accept the intervals that are logged both on Setmore and OpenTimeClock
   const datesToIntervals = datesToIntervalsPopulated(payPeriodStartObj, payPeriodEndObj);
@@ -78,35 +101,24 @@ function evaluateHoursWorked(
     .forEach((date) => {
       datesToIntervals[date] = intervalsIntersection(
         openTimeClockDatesToIntervals[date],
-        intervalsSimple(setmoreDatesToIntervals[date])
+        setmoreHoursDatesToIntervals[date]
       );
     });
 
-  // Handle breaks
-
-  // Handle time off
-
   // Add admin hours
-  const adminEntries = slotBlockers
-    .filter(slotBlocker => slotBlocker.Comments.startsWith('A -'));
-
-  adminEntries.forEach((entry) => {
-    const durationMinutes = entry.endTime - entry.startTime;
-    const startObj = moment(entry.startDate, setmoreResponseDateTimeFormat);
-    const endObj = moment(startObj).add(durationMinutes, 'minutes');
-
-    const interval = { startObj, endObj };
+  adminSlotBlockers.forEach((slotBlocker) => {
+    const interval = intervalFromSlotBlocker(slotBlocker);
     insertInterval(datesToIntervals, interval);
   });
 
   // Transform intervals to hours worked
   const datesToHoursWorked = {};
-  for (const date in datesToIntervals) {
-    if (datesToIntervals.hasOwnProperty(date)) {
+  Object
+    .keys(datesToIntervals)
+    .forEach((date) => {
       datesToHoursWorked[date] = datesToIntervals[date]
         .reduce((hours, intervalsObj) => hours + intervalsObj.endObj.diff(intervalsObj.startObj, 'hours', true), 0);
-    }
-  }
+    });
 
   return {
     name,
@@ -133,7 +145,7 @@ function formattedOpenTimeClockHours(openTimeClockHours, startDateObj, endDateOb
       endObj: endDateTimeObj
     };
 
-    insertInterval(datesToIntervals, interval, true);
+    insertInterval(datesToIntervals, interval);
   });
 
   return datesToIntervals;
@@ -148,17 +160,19 @@ function formattedOpenTimeClockHours(openTimeClockHours, startDateObj, endDateOb
 */
 function formattedSetmoreHours(setmoreHours, startDateObj, endDateObj) {
   const setmoreDayToHours = {
-    sunday: setmoreHours.su,
-    monday: setmoreHours.mo,
-    tuesday: setmoreHours.tu,
-    wednesday: setmoreHours.we,
-    thursday: setmoreHours.th,
-    friday: setmoreHours.fr,
-    saturday: setmoreHours.sa
+    sunday: setmoreHours.WorkingDays.includes('0') ? setmoreHours.su : '',
+    monday: setmoreHours.WorkingDays.includes('1') ? setmoreHours.mo : '',
+    tuesday: setmoreHours.WorkingDays.includes('2') ? setmoreHours.tu : '',
+    wednesday: setmoreHours.WorkingDays.includes('3') ? setmoreHours.we : '',
+    thursday: setmoreHours.WorkingDays.includes('4') ? setmoreHours.th : '',
+    friday: setmoreHours.WorkingDays.includes('5') ? setmoreHours.fr : '',
+    saturday: setmoreHours.WorkingDays.includes('6') ? setmoreHours.sa : ''
   };
   Object
     .keys(setmoreDayToHours)
     .forEach((day) => {
+      if (!day) return;
+
       const dataSplit = setmoreDayToHours[day].split(',');
       setmoreDayToHours[day] = {
         start: dataSplit[1],
@@ -187,10 +201,6 @@ function formattedSetmoreHours(setmoreHours, startDateObj, endDateObj) {
       datesToIntervals[date].push(interval);
     });
   return datesToIntervals;
-}
-
-function mergeDatesToIntervals(a, b) {
-
 }
 
 // Repeatedly merges intervals until array is simplified
@@ -311,9 +321,21 @@ function intervalsCopied(intervals) {
 
 function insertInterval(datesToIntervals, interval) {
   const intervals = datesToIntervals[interval.startObj.format(dateFormat)];
+  if (intervals === undefined) return;
+
   const insertIndex = findInsertIndex(intervals, interval.startObj);
 
   intervals.splice(insertIndex, 0, interval);
+}
+
+function subtractInterval(datesToIntervals, interval) {
+  const intervals = datesToIntervals[interval.startObj.format(dateFormat)];
+  if (intervals === undefined) return;
+
+  datesToIntervals[interval.startObj.format(dateFormat)] = intervalsDifference(
+    intervals,
+    [interval]
+  );
 }
 
 function findInsertIndex(intervals, timeObj) {
@@ -341,6 +363,18 @@ function areOverlapping(a, b) {
 // Returns true if interval-b is contained within interval-a
 function isContained(a, b) {
   return a.startObj.isBefore(b.startObj) && a.endObj.isAfter(b.endObj);
+}
+
+// Creates an interval from a slot blocker
+function intervalFromSlotBlocker(slotBlocker) {
+  const durationMinutes = slotBlocker.endTime - slotBlocker.startTime;
+  const startObj = moment(slotBlocker.startDate, setmoreResponseDateTimeFormat);
+  const endObj = moment(startObj).add(durationMinutes, 'minutes');
+
+  return {
+    startObj,
+    endObj
+  };
 }
 
 export default router;
