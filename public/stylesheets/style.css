@@ -47,3 +47,12 @@ a {
 input[type='date'], input[type='time'] {
   margin: 0 10px;
 }
+
+#hoursButtons {
+  width: 200px;
+}
+
+.buttons {
+  columns: 2;
+  margin: auto;
+}

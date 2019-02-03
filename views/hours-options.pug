@@ -4,5 +4,9 @@ input(id='payPeriodStartInput' type='date')
 input(id='payPeriodEndInput' type='date')
 h2 Tutors
 include tutors
-button(id='requestHoursButton') Request
+div(id='hoursButtons' class='buttons')
+    div
+        button(id='requestHoursButton') Request
+    div
+        button(id='sendEmailsButton') Send Emails
 script(src='/javascripts/hoursOptions.mjs' type='module')
