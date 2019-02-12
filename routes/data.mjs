@@ -7,6 +7,7 @@ import calculations from '../lib/calculations';
 const router = express.Router();
 
 router.post('/hours', async (req, res) => {
+  // Get tutor objects from selected tutors
   const tutors = req.body.tutors.map(setmoreId => allTutors.find(tutor => tutor.setmoreId === setmoreId));
 
   const hours = await calculations.getHours(
