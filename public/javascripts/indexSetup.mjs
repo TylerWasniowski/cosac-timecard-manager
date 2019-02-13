@@ -1,3 +1,5 @@
+import hoursOptions from './hoursOptions.mjs';
+import blockersOptions from './blockersOptions.mjs';
 import download from './download.mjs';
 
 
@@ -19,14 +21,14 @@ const tutorsListButton = document.querySelector(TUTORS_LIST_BUTTON_SELECTOR);
 hoursFileButton.onclick = () => {
   fetch('/options/hours')
     .then(res => res.text())
-    .then(renderOptions)
+    .then(options => renderOptions(options, hoursOptions.setup))
     .catch(alert);
 };
 
 slotBlockersButton.onclick = () => {
   fetch('/options/blockers')
     .then(res => res.text())
-    .then(renderOptions)
+    .then(blockers => renderOptions(blockers, blockersOptions.setup))
     .catch(alert);
 };
 
@@ -48,7 +50,13 @@ tutorsListButton.onclick = () => {
     .catch(alert);
 };
 
-function renderOptions(html) {
+let optionsAreOpen = false;
+
+function renderOptions(html, setup) {
+  if (optionsAreOpen) return;
+
+  optionsAreOpen = true;
+
   const optionsContainer = document.createElement('div');
   optionsContainer.className = OPTIONS_CONTAINER_CLASS_NAME;
 
@@ -60,6 +68,7 @@ function renderOptions(html) {
   exitButton.innerText = 'X';
   exitButton.onclick = () => {
     document.body.removeChild(optionsContainer);
+    optionsAreOpen = false;
   };
 
   optionsDiv.innerHTML = html;
@@ -68,13 +77,5 @@ function renderOptions(html) {
   optionsContainer.appendChild(optionsDiv);
   document.body.appendChild(optionsContainer);
 
-  optionsDiv.querySelectorAll('script')
-    .forEach((script) => {
-      optionsDiv.removeChild(script);
-
-      const newScript = document.createElement('script');
-      newScript.src = script.src;
-      newScript.type = 'module';
-      optionsDiv.appendChild(newScript);
-    });
+  setup();
 }

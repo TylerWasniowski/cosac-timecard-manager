@@ -1,6 +1,6 @@
 import download from './download.mjs';
 
-(() => {
+function setup() {
   const REQUEST_HOURS_BUTTON_SELECTOR = '#requestHoursButton';
   const PAY_PERIOD_START_INPUT_SELECTOR = '#payPeriodStartInput';
   const PAY_PERIOD_END_INPUT_SELECTOR = '#payPeriodEndInput';
@@ -56,5 +56,6 @@ import download from './download.mjs';
       .filter(checkbox => checkbox.checked)
       .map(checkbox => checkbox.id);
   }
+}
 
-})();
+export default { setup };

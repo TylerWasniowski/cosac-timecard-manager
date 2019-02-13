@@ -1,4 +1,4 @@
-(() => {
+function setup() {
   const TIME_START_SELECTOR = '#timeStart';
   const TIME_END_SELECTOR = '#timeEnd';
   const DESCRIPTION_SELECTOR = '#description';
@@ -55,4 +55,6 @@
       .filter(checkbox => checkbox.checked)
       .map(checkbox => checkbox.id);
   }
-})();
+}
+
+export default { setup };
