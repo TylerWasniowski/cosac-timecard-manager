@@ -1,11 +1,31 @@
-h1 Hours Request
-h2 Pay Period
-input(id='payPeriodStartInput' type='date')
-input(id='payPeriodEndInput' type='date')
-h2 Tutors
-include tutors
-div(id='hoursButtons' class='buttons')
-    div
-        button(id='requestHoursButton') Request
-    div
-        button(id='sendEmailsButton') Send Emails
+div(id='hoursOptions')
+    h1 Hours Request
+    h2 Pay Period
+    input(id='payPeriodStartInput' type='date')
+    input(id='payPeriodEndInput' type='date')
+    h2 Tutors
+    include tutors
+    div(id='hoursButtons' class='buttons')
+        div
+            button(id='requestHoursButton') Request
+        div
+            button(id='sendEmailsButton') Send Emails
+
+div(id='emailsOptions' hidden)
+    img(id='loadingImage' src='/images/loading.gif')
+
+    h1(id='name' hidden)
+
+    div(id='navigationButtons' hidden)
+        button(class='previousButton') &lt
+        button(class='nextButton') &gt
+
+    div(id='preview' hidden)
+        input(id='previewSubject' type='text')
+        textarea(id='previewBody')
+
+    div(id='emailButtons' class ='buttons')
+        div
+            button(id='cancelButton') Cancel
+        div
+            button(id='sendButton' hidden) Send

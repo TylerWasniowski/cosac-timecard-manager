@@ -3,7 +3,8 @@ import blockersOptions from './blockersOptions.mjs';
 import download from './download.mjs';
 
 
-const OPTIONS_CONTAINER_CLASS_NAME = 'optionsContainer';
+const OPTIONS_OUTER_CONTAINER_CLASS_NAME = 'optionsOuterContainer';
+const OPTIONS_INNER_CONTAINER_CLASS_NAME = 'optionsInnerContainer';
 const OPTIONS_CLASS_NAME = 'options';
 const EXIT_BUTTON_CLASS_NAME = 'exitButton';
 
@@ -50,32 +51,39 @@ tutorsListButton.onclick = () => {
     .catch(alert);
 };
 
-let optionsAreOpen = false;
+let optionsOpen = 0;
 
-function renderOptions(html, setup) {
-  if (optionsAreOpen) return;
+function renderOptions(html, setup, force) {
+  if (!force && optionsOpen) return;
 
-  optionsAreOpen = true;
+  optionsOpen += 1;
 
-  const optionsContainer = document.createElement('div');
-  optionsContainer.className = OPTIONS_CONTAINER_CLASS_NAME;
+  const optionsOuterContainer = document.createElement('div');
+  optionsOuterContainer.className = OPTIONS_OUTER_CONTAINER_CLASS_NAME;
 
-  const optionsDiv = document.createElement('div');
-  optionsDiv.className = OPTIONS_CLASS_NAME;
+  const optionsInnerContainer = document.createElement('div');
+  optionsInnerContainer.className = OPTIONS_INNER_CONTAINER_CLASS_NAME;
 
   const exitButton = document.createElement('span');
   exitButton.className = EXIT_BUTTON_CLASS_NAME;
   exitButton.innerText = 'X';
   exitButton.onclick = () => {
-    document.body.removeChild(optionsContainer);
-    optionsAreOpen = false;
+    document.body.removeChild(optionsOuterContainer);
+    optionsOpen -= 1;
   };
 
+  const optionsDiv = document.createElement('div');
+  optionsDiv.className = OPTIONS_CLASS_NAME;
   optionsDiv.innerHTML = html;
-  optionsDiv.prepend(exitButton);
 
-  optionsContainer.appendChild(optionsDiv);
-  document.body.appendChild(optionsContainer);
+  optionsInnerContainer.appendChild(exitButton);
+  optionsInnerContainer.appendChild(optionsDiv);
+  optionsOuterContainer.appendChild(optionsInnerContainer);
+  document.body.appendChild(optionsOuterContainer);
 
-  setup();
+  if (setup) setup();
 }
+
+export default {
+  renderOptions
+};

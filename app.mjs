@@ -6,16 +6,16 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import indexRouter from './routes/index';
 import dataRouter from './routes/data';
+import emailsRouter from './routes/emails';
 import tutorsRouter from './routes/tutors';
 import optionsRouter from './routes/options';
 import blockersRouter from './routes/blockers';
 import setmore from './lib/setmore-requests';
-import tutors from './data/tutors';
 
 const app = express();
 
 // Make a session for getting appointments for each tutor
-tutors.forEach(() => setmore.addSession());
+JSON.parse(process.env.tutors).forEach(() => setmore.addSession());
 // These two are for the staff info and staff hours
 setmore.addSession();
 setmore.addSession();
@@ -32,6 +32,7 @@ app.use(express.static(path.resolve('./public')));
 
 app.use('/', indexRouter);
 app.use('/data', dataRouter);
+app.use('/emails', emailsRouter);
 app.use('/tutors', tutorsRouter);
 app.use('/options', optionsRouter);
 app.use('/blockers', blockersRouter);

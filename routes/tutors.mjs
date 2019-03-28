@@ -1,21 +1,21 @@
 import express from 'express';
-import fs from 'fs';
+import replaceInFile from 'replace-in-file';
 import openTimeClock from '../lib/open-time-clock-requests';
 import setmore from '../lib/setmore-requests';
-import tutors from '../data/tutors';
+
 
 const router = express.Router();
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-  res.json(tutors);
+  res.json(JSON.parse(process.env.tutors));
 });
 
 router.get('/list', async (req, res, next) => {
   const setmoreResponse = setmore.getStaffServices();
   const setmoreData = await setmoreResponse;
 
-  const tutorsData = tutors
+  const tutorsData = JSON.parse(process.env.tutors)
     .map((tutor) => {
       const services = setmoreData
         .filter(service => service.ResourceKey.indexOf(tutor.setmoreId) !== -1)
@@ -40,16 +40,24 @@ router.post('/update', async (req, res, next) => {
   const tutors = setmoreData
     .map((setmoreEntry) => {
       const name = `${setmoreEntry.FirstName} ${setmoreEntry.LastName}`;
-      const openTimeClockEntry = openTimeClockData.find(openTimeClockEntry => openTimeClockEntry.Name === name);
+      const openTimeClockEntry = openTimeClockData.find(entry => entry.Name === name);
 
       return {
         name,
+        email: setmoreEntry.LoginId,
         openTimeClockId: openTimeClockEntry ? openTimeClockEntry.ID : '',
         setmoreId: setmoreEntry.key
       };
     });
 
-  fs.writeFile('./data/tutors.json', JSON.stringify(tutors), 'utf8', () => {});
+  const tutorsString = JSON.stringify(tutors);
+
+  process.env.tutors = tutorsString;
+  replaceInFile({
+    files: '.env',
+    from: /^(tutors\s*=.*)/gm,
+    to: `tutors='${tutorsString}'`
+  });
   res.json(tutors);
 });
 

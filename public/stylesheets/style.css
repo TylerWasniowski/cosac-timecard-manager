@@ -8,7 +8,7 @@ a {
   color: #00B7FF;
 }
 
-.optionsContainer {
+.optionsOuterContainer {
   position: absolute;
   top: 0;
   left: 0;
@@ -18,13 +18,14 @@ a {
   background: rgba(0, 0, 0, 0.8);
 }
 
-.options {
+.optionsInnerContainer {
   position: fixed;
   padding: 10px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
+  text-align: right;
   background: whitesmoke;
   border: black;
   border-style: ridge;
@@ -32,9 +33,18 @@ a {
   border-radius: 20px;
 }
 
+.options {
+  text-align: center;
+}
+
 .exitButton {
-  float: right;
+  padding: 0 7px;
   cursor: pointer;
+  font-size: 25px;
+  background: #FFA7A7;
+  border-style: ridge;
+  border-color: black;
+  border-radius: 12px;
 }
 
 .tutors {
@@ -50,6 +60,29 @@ input[type='date'], input[type='time'] {
 
 #hoursButtons {
   width: 200px;
+}
+
+.previousButton {
+  float: left;
+  height: 50px;
+  width: 40px;
+}
+
+.nextButton {
+  float: right;
+  height: 50px;
+  width: 40px;
+}
+
+#previewSubject {
+  width: 500px;
+}
+
+#previewBody {
+  min-width: 300px;
+  min-height: 150px;
+  width: 500px;
+  height: 250px;
 }
 
 .buttons {
