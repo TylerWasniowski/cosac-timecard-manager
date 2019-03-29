@@ -1,6 +1,6 @@
 /* eslint-disable promise/no-nesting */
 /* eslint-disable promise/always-return */
-import defaultSettings from './defaultSettings.mjs';
+import settings from './settings.mjs';
 
 import authorize from './authorization.mjs';
 
@@ -102,7 +102,7 @@ async function setup(tutorsPromise) {
       email: tutor.email,
       name: tutor.name
     },
-    subject: defaultSettings.EMAIL_SUBJECT,
+    subject: settings.getSubject(),
     body: formatEmailBody(tutor)
   }));
 
@@ -119,7 +119,7 @@ async function setup(tutorsPromise) {
   }
 
   function formatEmailBody(tutor) {
-    return defaultSettings.EMAIL_BODY_FORMAT
+    return settings.getEmailBodyFormat()
       .replace(/{name}/i, tutor.name.replace(/ .*/, ''))
       .replace(/{hours}/i, tutor.hours);
   }

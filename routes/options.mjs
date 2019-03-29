@@ -18,4 +18,8 @@ router.get('/authorization', (req, res) => {
   res.render('authorization');
 });
 
+router.get('/settings', (req, res) => {
+  res.render('settings');
+});
+
 export default router;

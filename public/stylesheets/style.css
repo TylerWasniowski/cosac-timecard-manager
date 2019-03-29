@@ -74,11 +74,11 @@ input[type='date'], input[type='time'] {
   width: 40px;
 }
 
-#previewSubject {
+#previewSubject, #emailSubject {
   width: 500px;
 }
 
-#previewBody {
+#previewBody, #emailBodyFormat {
   min-width: 300px;
   min-height: 150px;
   width: 500px;
