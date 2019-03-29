@@ -62,7 +62,7 @@ async function setup(tutorsPromise) {
       }
     })
       .then((res) => {
-        if (res.status === 200) alert('Emails sent.');
+        if (res.status === 200) alert('Emails sent');
         else authorize();
       })
       .catch(err => alert('ERROR - Sending emails failed. Please try again. See console for more info.') && console.log(err));
