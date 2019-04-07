@@ -4,15 +4,21 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+
 import indexRouter from './routes/index';
 import dataRouter from './routes/data';
 import emailsRouter from './routes/emails';
 import tutorsRouter from './routes/tutors';
 import optionsRouter from './routes/options';
 import blockersRouter from './routes/blockers';
+
+import config from './lib/config';
 import setmore from './lib/setmore-requests';
 
+
 const app = express();
+
+config.addNewConfigOptions();
 
 // Make a session for getting appointments for each tutor
 JSON.parse(process.env.tutors).forEach(() => setmore.addSession());
