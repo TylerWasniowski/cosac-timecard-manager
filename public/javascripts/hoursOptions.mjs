@@ -1,5 +1,5 @@
 import emailOptions from './emailOptions.mjs';
-import download from './download.mjs';
+import { download } from './helperFunctions.mjs';
 
 
 function setup() {

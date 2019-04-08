@@ -14,6 +14,10 @@ router.get('/blockers', (req, res) => {
   });
 });
 
+router.get('/cancellations', (req, res) => {
+  res.render('cancellations-options');
+});
+
 router.get('/authorization', (req, res) => {
   res.render('authorization');
 });
