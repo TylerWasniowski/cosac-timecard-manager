@@ -67,7 +67,7 @@ async function setup(tutorsPromise) {
         else if (res.status === 401) authorize();
         else throw new Error('error sending emails');
       })
-      .catch(err => alert('ERROR - Sending emails failed. Please try again. See console for more info.') && console.log(err));
+      .catch(err => alert('ERROR - Sending one or more emails failed. Please try again. See console for more info.') && console.log(err));
   };
 
   previousButton.onclick = () => {
