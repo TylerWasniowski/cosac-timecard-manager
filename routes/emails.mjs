@@ -3,12 +3,22 @@ import express from 'express';
 import gmailRequests from '../lib/gmail-requests';
 
 
+const {
+  notAuthedErrorMessage
+} = process.env;
+
 const router = express.Router();
 
 router.post('/send', (req, res) => {
   gmailRequests.sendEmails(req.body.emails)
     .then(() => res.sendStatus(200))
-    .catch(() => res.sendStatus(401));
+    .catch((err) => {
+      if (err.message === notAuthedErrorMessage) {
+        res.sendStatus(401);
+      } else {
+        res.sendStatus(500);
+      }
+    });
 });
 
 router.post('/authorize', (req, res) => {
