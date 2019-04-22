@@ -65,7 +65,7 @@ async function setup(tutorsPromise) {
       .then((res) => {
         if (res.status === 200) alert('Emails sent');
         else if (res.status === 401) authorize();
-        else throw new Error('error sending emails');
+        else throw new Error('error sending one or more emails');
       })
       .catch(err => alert('ERROR - Sending one or more emails failed. Please try again. See console for more info.') && console.log(err));
   };
