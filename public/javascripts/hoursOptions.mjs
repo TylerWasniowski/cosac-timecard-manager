@@ -8,7 +8,7 @@ function setup() {
 
   const TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
 
-  const REQUEST_HOURS_BUTTON_SELECTOR = '#requestHoursButton';
+  const DOWNLOAD_FILE_BUTTON_SELECTOR = '#downloadFileButton';
   const SEND_EMAILS_BUTTON_SELECTOR = '#sendEmailsButton';
 
 
@@ -17,11 +17,11 @@ function setup() {
 
   const tutorsCheckbox = document.querySelectorAll(TUTOR_CHECKBOX_SELECTOR);
 
-  const requestHoursButton = document.querySelector(REQUEST_HOURS_BUTTON_SELECTOR);
+  const downloadFileButton = document.querySelector(DOWNLOAD_FILE_BUTTON_SELECTOR);
   const sendEmailsButton = document.querySelector(SEND_EMAILS_BUTTON_SELECTOR);
 
 
-  requestHoursButton.onclick = (event) => {
+  downloadFileButton.onclick = (event) => {
     const filename = `${payPeriodStartInput.value} - ${payPeriodEndInput.value}.txt`;
 
     fetchTutors(getCheckedTutors(), payPeriodStartInput.value, payPeriodEndInput.value)
