@@ -8,24 +8,24 @@
     "test": "npm run lint"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.3",
+    "cookie-parser": "^1.4.4",
     "debug": "~3.1.0",
-    "dotenv": "^6.0.0",
-    "eslint": "^5.15.3",
-    "eslint-config-bliss": "^2.2.0",
-    "esm": "^3.0.82",
-    "express": "~4.16.3",
+    "dotenv": "^6.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-bliss": "^2.3.0",
+    "esm": "^3.2.22",
+    "express": "^4.16.4",
     "googleapis": "^38.0.0",
-    "http-errors": "~1.7.0",
-    "moment": "^2.22.2",
+    "http-errors": "^1.7.2",
+    "moment": "^2.24.0",
     "morgan": "^1.9.1",
-    "node": "^10.10.0",
-    "open": "^6.0.0",
+    "node": "^10.15.3",
+    "open": "^6.2.0",
     "pug": "2.0.3",
     "replace-in-file": "^3.4.4",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
-    "tough-cookie": "^2.4.3"
+    "request-promise": "^4.2.4",
+    "tough-cookie": "^2.5.0"
   },
   "esm": {
     "cjs": true
