@@ -11,34 +11,34 @@ const OPTIONS_INNER_CONTAINER_CLASS_NAME = 'optionsInnerContainer';
 const OPTIONS_CLASS_NAME = 'options';
 const EXIT_BUTTON_CLASS_NAME = 'exitButton';
 
-const HOURS_FILE_BUTTON_SELECTOR = '#hoursButton';
-const SLOT_BLOCKERS_BUTTON_SELECTOR = '#slotBlockersButton';
+const HOURS_WORKED_REPORT_BUTTON_SELECTOR = '#hoursWorkedReportButton';
+const CREATE_SETMORE_SLOT_BLOCKERS_BUTTON_SELECTOR = '#createSetmoreSlotBlockersButton';
 const UPDATE_TUTORS_BUTTON_SELECTOR = '#updateTutorsButton';
-const TUTORS_LIST_BUTTON_SELECTOR = '#tutorsListButton';
+const DOWNLOAD_TUTORS_COURSES_LIST_BUTTON_SELECTOR = '#downloadTutorCoursesListButton';
 
 const CANCELLATION_REPORT_BUTTON_SELECTOR = '#cancellationReportButton';
 
 const SETTINGS_BUTTON_SELECTOR = '#settingsButton';
 
 
-const hoursFileButton = document.querySelector(HOURS_FILE_BUTTON_SELECTOR);
-const slotBlockersButton = document.querySelector(SLOT_BLOCKERS_BUTTON_SELECTOR);
+const hoursWorkedReportButton = document.querySelector(HOURS_WORKED_REPORT_BUTTON_SELECTOR);
+const createSetmoreSlotBlockersButton = document.querySelector(CREATE_SETMORE_SLOT_BLOCKERS_BUTTON_SELECTOR);
 const updateTutorsButton = document.querySelector(UPDATE_TUTORS_BUTTON_SELECTOR);
-const tutorsListButton = document.querySelector(TUTORS_LIST_BUTTON_SELECTOR);
+const downloadTutorCoursesListButton = document.querySelector(DOWNLOAD_TUTORS_COURSES_LIST_BUTTON_SELECTOR);
 
 const cancellationReportButton = document.querySelector(CANCELLATION_REPORT_BUTTON_SELECTOR);
 
 const settingsButton = document.querySelector(SETTINGS_BUTTON_SELECTOR);
 
 
-hoursFileButton.onclick = () => {
+hoursWorkedReportButton.onclick = () => {
   fetch('/options/hours')
     .then(res => res.text())
     .then(hoursOptionsHTML => renderOptions(hoursOptionsHTML, hoursOptions.setup))
     .catch(alert);
 };
 
-slotBlockersButton.onclick = () => {
+createSetmoreSlotBlockersButton.onclick = () => {
   fetch('/options/blockers')
     .then(res => res.text())
     .then(blockersOptionsHTML => renderOptions(blockersOptionsHTML, blockersOptions.setup))
@@ -53,8 +53,8 @@ updateTutorsButton.onclick = () => {
     .catch(alert);
 };
 
-tutorsListButton.onclick = () => {
-  fetch('/tutors/list', {
+downloadTutorCoursesListButton.onclick = () => {
+  fetch('/tutors/courses-list', {
     method: 'GET'
   })
     .then(res => res.json())
@@ -63,7 +63,7 @@ tutorsListButton.onclick = () => {
       + `Classes: ${tutor.services.join(', ')}`
     )))
     .then(tutors => tutors.join('\n\n'))
-    .then(tutors => download(`tutors list - ${formatDate(new Date(), '-')}.txt`, tutors))
+    .then(tutors => download(`tutors courses list - ${formatDate(new Date(), '-')}.txt`, tutors))
     .catch(alert);
 };
 

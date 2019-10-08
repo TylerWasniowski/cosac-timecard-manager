@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
   res.json(JSON.parse(process.env.tutors));
 });
 
-router.get('/list', async (req, res, next) => {
+router.get('/courses-list', async (req, res, next) => {
   const setmoreResponse = setmore.getStaffServices();
   const setmoreData = await setmoreResponse;
 
