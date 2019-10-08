@@ -9,7 +9,7 @@ function setup() {
   const TUTOR_CHECKBOX_SELECTOR = '.tutors input[type=\'checkbox\']';
 
   const DOWNLOAD_FILE_BUTTON_SELECTOR = '#downloadFileButton';
-  const SEND_EMAILS_BUTTON_SELECTOR = '#sendEmailsButton';
+  const PREVIEW_EMAILS_BUTTON_SELECTOR = '#previewEmailsButton';
 
 
   const payPeriodStartInput = document.querySelector(PAY_PERIOD_START_INPUT_SELECTOR);
@@ -18,7 +18,7 @@ function setup() {
   const tutorsCheckbox = document.querySelectorAll(TUTOR_CHECKBOX_SELECTOR);
 
   const downloadFileButton = document.querySelector(DOWNLOAD_FILE_BUTTON_SELECTOR);
-  const sendEmailsButton = document.querySelector(SEND_EMAILS_BUTTON_SELECTOR);
+  const previewEmailsButton = document.querySelector(PREVIEW_EMAILS_BUTTON_SELECTOR);
 
 
   downloadFileButton.onclick = (event) => {
@@ -31,7 +31,7 @@ function setup() {
       .catch(alert);
   };
 
-  sendEmailsButton.onclick = () => {
+  previewEmailsButton.onclick = () => {
     emailOptions.setup(
       fetchTutors(getCheckedTutors(), payPeriodStartInput.value, payPeriodEndInput.value)
     );
