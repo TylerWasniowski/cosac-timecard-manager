@@ -60,11 +60,71 @@ function fetchTutors(tutors, startDate, endDate) {
         return res;
       })
       .then(res => res.json())
+      .then((tutorsInfo) => {
+        tutorsInfo.forEach(checkWeekends);
+        tutorsInfo.forEach(checkWeeklyHours);
+        tutorsInfo.forEach(checkMonthlyHours);
+
+        return tutorsInfo;
+      })
       .then(tutorsInfo => tutorsInfo.map(tutor => ({
         ...tutor,
         hours: formatHours(tutor.hours)
       })))
   );
+}
+
+// Alerts if tutor is working weekends
+function checkWeekends(tutor) {
+  const hours = calculateRoundedHours(tutor.hours);
+
+  Object
+    .keys(hours)
+    .forEach((date) => {
+      const dateObj = makeDateObj(date);
+      if (isWeekend(dateObj) && hours[date] > 0) {
+        alert(`${tutor.name} is working on a weekend (${date})`);
+      }
+    });
+}
+
+// Alerts if tutor is working more than 20 hours a week
+function checkWeeklyHours(tutor) {
+  const hours = calculateRoundedHours(tutor.hours);
+
+  let hoursWorkedCurrentWeek = 0;
+
+  Object
+    .keys(hours)
+    .forEach((date) => {
+      const dateObj = makeDateObj(date);
+      if (dateObj.getDay() === 0) {
+        if (hoursWorkedCurrentWeek > 20) {
+          const lastWeekDateObj = new Date(dateObj);
+          lastWeekDateObj.setDate(dateObj.getDate() - 7);
+
+          const rangeStr = `${lastWeekDateObj.toDateString()}-${dateObj.toDateString()}`;
+          alert(`${tutor.name} is working more than 20 hours a week (${hoursWorkedCurrentWeek} hours during ${rangeStr})`);
+        }
+        hoursWorkedCurrentWeek = 0;
+      }
+
+      hoursWorkedCurrentWeek += hours[date];
+    });
+}
+
+// Alerts if tutor is working more than 80 hours in the pay period
+function checkMonthlyHours(tutor) {
+  const hours = calculateRoundedHours(tutor.hours);
+
+  const totalHours = Object
+    .keys(hours)
+    .map(date => hours[date])
+    .reduce((total, current) => total + current, 0);
+
+  if (totalHours > 80) {
+    alert(`${tutor.name} is working more than 80 hours this pay period (${totalHours} total)`);
+  }
 }
 
 function formatHours(hours) {
@@ -86,6 +146,26 @@ function formatHours(hours) {
   }\nTotal Hours: ${totalHours}`;
 
   return hoursString;
+}
+
+function isWeekend(dateObj) {
+  return dateObj.getDay() === 6 || dateObj.getDay() === 0;
+}
+
+// Round hours to nearest 0.5, returns them
+function calculateRoundedHours(hours) {
+  const hoursRounded = {};
+  Object
+    .keys(hours)
+    .forEach((date) => {
+      hoursRounded[date] = (Math.round(hours[date] * 2) / 2);
+    });
+
+  return hoursRounded;
+}
+
+function makeDateObj(date) {
+  return new Date(`${date} 00:00`);
 }
 
 export default {
