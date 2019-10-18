@@ -27,7 +27,7 @@ function setup() {
       })
         .then(res => res.json())
         .then(history => history.forEach(entry => {
-          download(`${entry.tutor.name} ${fromDateInput.value}-${toDateInput.value}.txt`, `${JSON.stringify(entry)}`)
+          download(`${entry.tutor.name} ${fromDateInput.value} - ${toDateInput.value}.txt`, `${JSON.stringify(entry)}`)
         }));
   };
 
