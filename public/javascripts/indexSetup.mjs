@@ -1,6 +1,7 @@
-import hoursOptions from './hoursOptions.mjs';
 import blockersOptions from './blockersOptions.mjs';
 import cancellationsOptions from './cancellationsOptions.mjs';
+import historyOptions from './historyOptions.mjs';
+import hoursOptions from './hoursOptions.mjs';
 import settings from './settings.mjs';
 
 import { download, formatDate } from './helperFunctions.mjs';
@@ -15,6 +16,7 @@ const HOURS_WORKED_REPORT_BUTTON_SELECTOR = '#hoursWorkedReportButton';
 const CREATE_SETMORE_SLOT_BLOCKERS_BUTTON_SELECTOR = '#createSetmoreSlotBlockersButton';
 const UPDATE_TUTORS_BUTTON_SELECTOR = '#updateTutorsButton';
 const DOWNLOAD_TUTORS_COURSES_LIST_BUTTON_SELECTOR = '#downloadTutorCoursesListButton';
+const DOWNLOAD_TUTOR_HISTORY_BUTTON_SELECTOR = '#downloadTutorHistoryButton';
 
 const CANCELLATION_REPORT_BUTTON_SELECTOR = '#cancellationReportButton';
 
@@ -25,6 +27,7 @@ const hoursWorkedReportButton = document.querySelector(HOURS_WORKED_REPORT_BUTTO
 const createSetmoreSlotBlockersButton = document.querySelector(CREATE_SETMORE_SLOT_BLOCKERS_BUTTON_SELECTOR);
 const updateTutorsButton = document.querySelector(UPDATE_TUTORS_BUTTON_SELECTOR);
 const downloadTutorCoursesListButton = document.querySelector(DOWNLOAD_TUTORS_COURSES_LIST_BUTTON_SELECTOR);
+const downloadTutorHistoryButton = document.querySelector(DOWNLOAD_TUTOR_HISTORY_BUTTON_SELECTOR);
 
 const cancellationReportButton = document.querySelector(CANCELLATION_REPORT_BUTTON_SELECTOR);
 
@@ -41,7 +44,7 @@ hoursWorkedReportButton.onclick = () => {
 createSetmoreSlotBlockersButton.onclick = () => {
   fetch('/options/blockers')
     .then(res => res.text())
-    .then(blockersOptionsHTML => renderOptions(blockersOptionsHTML, blockersOptions.setup))
+    .then(historyOptionsHTML => renderOptions(historyOptionsHTML, blockersOptions.setup))
     .catch(alert);
 };
 
@@ -67,6 +70,12 @@ downloadTutorCoursesListButton.onclick = () => {
     .catch(alert);
 };
 
+downloadTutorHistoryButton.onclick = () => {
+  fetch('/options/history')
+    .then(res => res.text())
+    .then(historyOptionsHTML => renderOptions(historyOptionsHTML, historyOptions.setup))
+    .catch(alert);
+};
 
 cancellationReportButton.onclick = () => {
   fetch('/options/cancellations')
@@ -76,7 +85,6 @@ cancellationReportButton.onclick = () => {
     ))
     .catch(alert);
 };
-
 
 settingsButton.onclick = () => {
   fetch('/options/settings')

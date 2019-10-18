@@ -88,6 +88,28 @@ router.post('/cancellations', async (req, res) => {
   res.send(allCancellations);
 });
 
+router.post('/history', async (req, res) => {
+  const fromDateObject = moment(req.body.fromDate);
+  const toDateObject = moment(req.body.toDate);
+
+  // Get tutor objects from selected tutor ids
+  const selectedTutors = req.body.tutors
+    .map(setmoreId => (JSON.parse(process.env.tutors)
+      .find(tutor => tutor.setmoreId === setmoreId)
+    ));
+
+  const historyPromises = selectedTutors.map(tutor => setmore
+    .getAppointments(tutor.setmoreId, fromDateObject, toDateObject)
+    .then(appointments => ({
+      tutor,
+      appointments
+    }))
+  );
+  const history = await Promise.all(historyPromises);
+
+  res.send(history);
+});
+
 router.post('/hours', async (req, res) => {
   // Get tutor objects from selected tutor ids
   const selectedTutors = req.body.tutors
