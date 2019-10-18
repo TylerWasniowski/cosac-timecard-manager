@@ -8,6 +8,10 @@ a {
   color: #00B7FF;
 }
 
+#downloader {
+  display: none;
+}
+
 .optionsOuterContainer {
   position: absolute;
   top: 0;

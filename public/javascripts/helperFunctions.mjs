@@ -1,15 +1,12 @@
-// Taken from: https://stackoverflow.com/a/18197341
 export function download(filename, text) {
-  const element = document.createElement('a');
-  element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
-  element.setAttribute('download', filename);
+  const DOWNLOADER_SELECTOR = '#downloader';
 
-  element.style.display = 'none';
-  document.body.appendChild(element);
+  const downloader = document.querySelector(DOWNLOADER_SELECTOR);
 
-  element.click();
+  downloader.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
+  downloader.setAttribute('download', filename);
 
-  document.body.removeChild(element);
+  downloader.click();
 }
 
 export function formatDate(dateObject, separator) {
