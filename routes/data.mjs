@@ -103,8 +103,7 @@ router.post('/history', async (req, res) => {
     .then(appointments => ({
       tutor,
       appointments
-    }))
-  );
+    })));
   const history = await Promise.all(historyPromises);
 
   res.send(history);
@@ -125,6 +124,8 @@ router.post('/hours', async (req, res) => {
     );
     res.send(hours);
   } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(err);
     res.sendStatus(500);
   }
 });

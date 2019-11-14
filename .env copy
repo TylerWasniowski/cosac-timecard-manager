@@ -1,0 +1,40 @@
+PORT=3000
+
+setmoreUsername='tylerwasniowski@gmail.com'
+setmorePassword='meme1232'
+
+openTimeClockCompanyId='67189'
+setmoreCompanyId='a2cd33c3-f69a-4c00-abee-9703173a882d'
+
+dateFormat='YYYY-MM-DD'
+timeFormat='HH:mm'
+
+gettingProfileErrorMessage='error getting profile'
+notAuthedErrorMessage='not authed'
+noTokenErrorMessage='no token'
+
+openTimeClockDateFormat='MM/DD/YYYY'
+openTimeClockDateSeparator='-'
+openTimeClockDateTimeFormat='YYYY-MM-DD HH:mm:ss'
+
+setmoreTimeFormat='hh:mm A'
+setmoreRequestDateTimeFormat='DD-MMM-YYYY-HH:mm:ss'
+setmoreResponseDateTimeFormat='DD MMM YYYY hh:mm A'
+setmoreCreateAppointmentToAndFromDateFormat='MMM DD, YYYY hh:mm:ss A'
+setmoreCreateAppointmentStartAndEndDateFormat='DD MMM YYYY hh:mm a'
+setmoreCreateAppointmentStartAndEndTimeFormat='YYYY-MM-DDTHH:mm:ss.SSS[Z]'
+setmoreCreateAppointmentDateAndTimeFormat='DD MM YYYY HH:mm'
+setmoreCreateAppointmentAptStartAndEndDateFormat='ddd MMM DD YYYY HH:mm:ss [GMT]ZZ'
+
+setmoreCancelledAppointmentDateTimeFormat= 'DD MMM YYYY @ hh:mm A'
+
+setmoreExtendedHoursRegex='^(\s*(E|e)\s*-)'
+setmoreAdminHoursRegex='^(\s*(A|a)\s*-)'
+
+setmoreNotificationInfoFormat='(.*?) for a (.*?) on (.*?) with (.*?)'
+
+tutors='[{"name":"Krishna Patel","email":"krishnahasmukhlal.patel@sjsu.edu","openTimeClockId":"819499","setmoreId":"r6c041566312101283"},{"name":"Kenneth Lee","email":"lee.kenneth12@gmail.com","openTimeClockId":"819510","setmoreId":"r24f81566312163124"},{"name":"Sam Hui","email":"sam.hui@sjsu.edu","openTimeClockId":"679246","setmoreId":"rc5b51516469689819"},{"name":"Jamie Alea","email":"jamie.alea@sjsu.edu","openTimeClockId":"","setmoreId":"r85661464196793680"},{"name":"Anida Len","email":"anida.a.len@gmail.com","openTimeClockId":"439757","setmoreId":"r7f561458078625646"},{"name":"Stina Almaleh","email":"stina.al-maleh@sjsu.edu","openTimeClockId":"642887","setmoreId":"r13371567111675513"},{"name":"Tommy Wen Chin","email":"tommychinwj@yahoo.com","openTimeClockId":"742921","setmoreId":"rf38e1538769618359"},{"name":"Science Help Desk","email":"","openTimeClockId":"","setmoreId":"r38f31453167409239"},{"name":"CoSAC Tutoring","email":"science-tutoringcenter@sjsu.edu","openTimeClockId":"","setmoreId":"r3311424673164243"},{"name":"Lovejot Singh","email":"contactlovejot@gmail.com","openTimeClockId":"729938","setmoreId":"ra5231534353955703"},{"name":"Kris Dudley","email":"kris.dudley@sjsu.edu","openTimeClockId":"","setmoreId":"raeb71505420355912"},{"name":"Elaine Collins","email":"elaine.collins@sjsu.edu","openTimeClockId":"","setmoreId":"r67381464196849336"},{"name":"Christian Aspiras","email":"christian.aspiras@sjsu.edu","openTimeClockId":"826850","setmoreId":"r21231568308121053"},{"name":"Destiny Kapule","email":"destiny-408@hotmail.com","openTimeClockId":"751017","setmoreId":"r80941540261837290"},{"name":"Simi Kaur","email":"hsimi123@gmail.com","openTimeClockId":"645079","setmoreId":"reb141508084958373"},{"name":"Sai Byri","email":"saikiran.byrivenkata@sjsu.edu","openTimeClockId":"773435","setmoreId":"r40451549229620940"},{"name":"Tyler Wasniowski","email":"tylerwasniowski@gmail.com","openTimeClockId":"642886","setmoreId":"r81b31507250233588"},{"name":"JR Baruela","email":"jrbaruela@gmail.com","openTimeClockId":"439742","setmoreId":"r35211458078534330"},{"name":"Jordan Mercado","email":"jmercadoca@gmail.com","openTimeClockId":"819506","setmoreId":"rb37c1566312229192"},{"name":"Lovejot Singh","openTimeClockId":"729938","setmoreId":"ra5231534353955703"},{"name":"Marilyn Aguilar","openTimeClockId":"642563","setmoreId":"rceff1507250366754"},{"name":"Simi Kaur","openTimeClockId":"645079","setmoreId":"reb141508084958373"},{"name":"Kris Dudley","openTimeClockId":"","setmoreId":"raeb71505420355912"},{"name":"Minh Do","openTimeClockId":"","setmoreId":"r2e1a1458078682621"},{"name":"Anida Len","openTimeClockId":"439757","setmoreId":"r7f561458078625646"},{"name":"Elaine Collins","openTimeClockId":"","setmoreId":"r67381464196849336"},{"name":"Tommy Wen Chin","openTimeClockId":"","setmoreId":"rf38e1538769618359"},{"name":"Sam Hui","openTimeClockId":"679246","setmoreId":"rc5b51516469689819"},{"name":"Jason Rondez","openTimeClockId":"742913","setmoreId":"rc6a41538690187835"},{"name":"JR Baruela","openTimeClockId":"439742","setmoreId":"r35211458078534330"},{"name":"CoSAC Tutoring","openTimeClockId":"","setmoreId":"r3311424673164243"},{"name":"Science Help Desk","openTimeClockId":"","setmoreId":"r38f31453167409239"},{"name":"Jamie Alea","openTimeClockId":"","setmoreId":"r85661464196793680"},{"name":"Michelle Chau","openTimeClockId":"643053","setmoreId":"rf37d1506671377787"},{"name":"Vikram Rangaraj","openTimeClockId":"677877","setmoreId":"r80ac1516470783736"},{"name":"Alan Duong","openTimeClockId":"677870","setmoreId":"rf8cf1516471431080"},{"name":"Stina Almaleh","openTimeClockId":"642887","setmoreId":"rd6a11507266453890"},{"name":"Tyler Wasniowski","openTimeClockId":"642886","setmoreId":"r81b31507250233588"},{"name":"Jason Tellis","openTimeClockId":"742911","setmoreId":"r5f9b1538339210275"}]'
+
+gmailApiKey='{"installed":{"client_id":"356205104369-mkma9n0hjbneubvtgpnqlivgut20kfgq.apps.googleusercontent.com","project_id":"quickstart-1553194175286","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"j7AwWJXG6SJ1kY9IOx11ncaB","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}'
+
+gmailToken='{"access_token":"ya29.GlvZBu4InCw--2zAItUuXpBFqEPdZu5mVDpR63MZBpHdnPCfhwy8vBpR9l1ayieD3S7TuLroFmwS-ou-GL7gjrJb_MthpWaQRmpIPA40iNqZT3BpD67oSWpT60A5","refresh_token":"1/pkhF6lGL3esbV0so6dPz-rabhIeB60WffL0rgRlzDnA","scope":"https://www.googleapis.com/auth/gmail.send https://mail.google.com/ https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.modify","token_type":"Bearer","expiry_date":1553819439215}'
