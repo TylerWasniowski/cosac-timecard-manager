@@ -53,6 +53,8 @@ updateTutorsButton.onclick = () => {
     method: 'POST'
   })
     .then(res => res.json())
+    // eslint-disable-next-line no-alert
+    .then(() => alert('Tutors updated!'))
     .catch(alert);
 };
 
