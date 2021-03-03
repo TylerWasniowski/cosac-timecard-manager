@@ -21,7 +21,7 @@
     "morgan": "^1.9.1",
     "node": "^10.15.3",
     "open": "^6.2.0",
-    "pug": "2.0.3",
+    "pug": "3.0.1",
     "replace-in-file": "^3.4.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
