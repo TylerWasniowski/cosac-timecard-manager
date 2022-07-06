@@ -17,7 +17,7 @@
     "express": "^4.16.4",
     "googleapis": "^38.0.0",
     "http-errors": "^1.7.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "morgan": "^1.9.1",
     "node": "^10.15.3",
     "open": "^6.2.0",
